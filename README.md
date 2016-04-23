@@ -4,11 +4,9 @@ Integrates ServiceWorker scripts with the Rails asset pipeline.
 
 ## Features
 
-TODO
-
-## Examples
-
-TODO
+* Leverages Rails asset pipeline to compile service worker scripts
+* Adds appropriate response headers to service worker scripts
+* Renders compiled source in production and development
 
 ## Installation
 
@@ -28,7 +26,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Currently, `serviceworker-rails` assumes your script resolves to `serviceworker.js`
 
 ## Development
 
