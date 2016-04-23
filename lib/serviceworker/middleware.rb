@@ -1,14 +1,17 @@
 module ServiceWorker
   class Middleware
-    def initialize(app, logger: ServiceWorker.logger)
+    def initialize(app, opts = {})
       @app = app
-      @logger = logger
+      @opts = opts
+
+      @logger = opts.fetch(:logger, ServiceWorker.logger)
     end
 
     def call(env)
       case env['REQUEST_METHOD']
       when 'GET', 'HEAD'
         path = env['PATH_INFO'].chomp('/')
+        info("responding to #{path}")
         return respond_to(path, env) if match?(path)
       end
 
@@ -22,8 +25,16 @@ module ServiceWorker
     private
 
     def respond_to(path_info, env)
+      status, headers, body = handle_request(path_info, env)
+
+      headers['Cache-Control'] = 'private, max-age=0, no-cache'
+
+      [status, headers, body]
+    end
+
+    def handle_request(path_info, env)
       if config.compile
-        info "Compiling #{path_info} from Sprockets"
+        info "compiling #{path_info} from Sprockets"
         sprockets_server.call(env)
       else
         file_path = asset_path(path_info)
