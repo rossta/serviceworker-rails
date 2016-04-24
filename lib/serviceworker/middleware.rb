@@ -28,38 +28,21 @@ module ServiceWorker
     end
 
     def respond_to_route(route, env)
-      status, headers, body = handle_route(route, env)
+      status, headers, body = process_handler(route, env)
 
       [status, headers.merge(@headers).merge(route.headers), body]
     end
 
-    def handle_route(route, env)
-      if config.compile
-        sprockets_server.call(env.merge("PATH_INFO" => route.asset_name))
-      else
-        file_path = asset_path(route.asset_name)
-        file_server.call(env.merge("PATH_INFO" => file_path))
-      end
+    def process_handler(route, env)
+      handler.call(env.merge("serviceworker.asset_name" => route.asset_name))
     end
 
     def info(msg)
       logger.info "[#{self.class}] - #{msg}"
     end
 
-    def sprockets_server
-      ::Rails.application.assets
-    end
-
-    def file_server
-      @file_server ||= ::Rack::File.new(::Rails.root.join("public"))
-    end
-
-    def config
-      ::Rails.configuration.assets
-    end
-
-    def asset_path(path)
-      ::ActionController::Base.helpers.asset_path(path)
+    def handler
+      @handler ||= @opts.fetch(:handler, ServiceWorker::Rails::Handler.new)
     end
 
     def logger
