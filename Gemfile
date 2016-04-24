@@ -4,3 +4,5 @@ source 'https://rubygems.org'
 gemspec
 
 gem "pry-byebug", platforms: [:ruby_23]
+gem "guard"
+gem "guard-minitest"
