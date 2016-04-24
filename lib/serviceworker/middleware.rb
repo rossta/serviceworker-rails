@@ -3,14 +3,13 @@ module ServiceWorker
     def initialize(app, opts = {})
       @app = app
       @opts = opts
-
-      @logger = opts.fetch(:logger, ServiceWorker.logger)
+      @headers = opts.fetch(:headers, {}).merge(default_headers)
     end
 
     def call(env)
-      case env['REQUEST_METHOD']
-      when 'GET', 'HEAD'
-        path = env['PATH_INFO'].chomp('/')
+      case env["REQUEST_METHOD"]
+      when "GET", "HEAD"
+        path = env["PATH_INFO"].chomp("/")
         info("responding to #{path}")
         return respond_to(path, env) if match?(path)
       end
@@ -19,15 +18,21 @@ module ServiceWorker
     end
 
     def match?(path)
-      path == '/serviceworker.js'
+      path == "/serviceworker.js"
     end
 
     private
 
+    def default_headers
+      {
+        "Cache-Control" => "private, max-age=0, no-cache"
+      }
+    end
+
     def respond_to(path_info, env)
       status, headers, body = handle_request(path_info, env)
 
-      headers['Cache-Control'] = 'private, max-age=0, no-cache'
+      headers.merge!(@headers)
 
       [status, headers, body]
     end
@@ -39,12 +44,12 @@ module ServiceWorker
       else
         file_path = asset_path(path_info)
         info "Proxing #{path_info} from #{file_path}"
-        file_server.call(env.merge('PATH_INFO' => file_path))
+        file_server.call(env.merge("PATH_INFO" => file_path))
       end
     end
 
     def info(msg)
-      @logger.info "[#{self.class}] - #{msg}"
+      logger.info "[#{self.class}] - #{msg}"
     end
 
     def sprockets_server
@@ -56,11 +61,15 @@ module ServiceWorker
     end
 
     def config
-      ::Rails.application.config.assets
+      ::Rails.configuration.assets
     end
 
     def asset_path(path)
-      ::ActionController::Base.helpers.asset_path(path.gsub(/^\//, ''))
+      ::ActionController::Base.helpers.asset_path(path.gsub(/^\//, ""))
+    end
+
+    def logger
+      @logger ||= @opts.fetch(:logger, Logger.new(STDOUT))
     end
   end
 end
