@@ -1,5 +1,6 @@
 require "rails"
 require "rails/railtie"
+require "serviceworker"
 
 module ServiceWorker
   class Railtie < ::Rails::Railtie
@@ -10,6 +11,8 @@ module ServiceWorker
 
     initializer "serviceworker-rails.configure_rails_initialization" do
       config.serviceworker.logger ||= ::Rails.logger
+      config.serviceworker.routes.draw_default unless config.serviceworker.routes.any?
+
       app.middleware.use ServiceWorker::Middleware, config.serviceworker
     end
 

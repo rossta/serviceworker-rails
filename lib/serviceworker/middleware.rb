@@ -4,7 +4,7 @@ module ServiceWorker
       @app = app
       @opts = opts
       @headers = opts.fetch(:headers, {}).merge(default_headers)
-      @router = opts.fetch(:routes, ServiceWorker::Router.default)
+      @router = opts.fetch(:routes, ServiceWorker::Router.new)
     end
 
     def call(env)
