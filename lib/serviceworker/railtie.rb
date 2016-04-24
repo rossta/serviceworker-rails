@@ -1,6 +1,5 @@
 require "rails"
 require "rails/railtie"
-require "pry"
 
 module ServiceWorker
   class Railtie < ::Rails::Railtie
