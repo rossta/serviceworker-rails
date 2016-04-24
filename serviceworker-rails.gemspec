@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["rosskaff@gmail.com"]
 
   spec.summary       = %q{ServiceWorker for Rails 3+}
-  spec.description   = %q{Integrates ServiceWorker JavaScript support into the Rails asset pipeline.}
+  spec.description   = %q{Integrates ServiceWorker into the Rails asset pipeline.}
   spec.homepage      = "https://github.com/rossta/serviceworker-rails"
   spec.license       = "MIT"
 
