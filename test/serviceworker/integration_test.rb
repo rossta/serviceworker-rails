@@ -31,17 +31,7 @@ class ServiceWorker::IntegrationTest < Minitest::Test
     assert_equal "foobar", last_response.headers["X-Custom-Header"]
   end
 
-  def test_basic_serviceworker_proxy
-    # resource "/basic-serviceworker.js",
-    get "/basic-serviceworker.js"
-
-    assert last_response.ok?
-    assert_match %r{console.log\(.*'Hello from Basic ServiceWorker!'.*\);}, last_response.body
-  end
-
   def test_nested_serviceworker_proxy
-    # resource "/nested/serviceworker.js",
-    #   asset: "another/serviceworker.js"
     get "/nested/serviceworker.js"
 
     assert last_response.ok?
@@ -49,17 +39,13 @@ class ServiceWorker::IntegrationTest < Minitest::Test
   end
 
   def test_inline_header_serviceworker_proxy
-    # resource "/headers/serviceworker.js",
-    #   headers: { "X-Resource-Header" => "A resource" }
-    get "/headers/serviceworker.js"
+    get "/header-serviceworker.js"
 
     assert last_response.ok?
-    assert_match %r{console.log\(.*'Hello from Header ServiceWorker!'.*\);}, last_response.body
+    assert_match %r{console.log\(.*'Hello from Another ServiceWorker!'.*\);}, last_response.body
   end
 
   def test_globbed_serviceworker_proxy
-    # resource "/*/serviceworker.js",
-    #   asset: "serviceworker.js"
     get "/catchall/serviceworker.js"
 
     assert last_response.ok?

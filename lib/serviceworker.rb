@@ -1,17 +1,27 @@
 module ServiceWorker
   class Router
+    def self.default
+      new do
+        get "/serviceworker.js"
+      end
+    end
+
     def initialize
       @routes = []
+
+      draw(&Proc.new) if block_given?
     end
 
     def draw(&block)
-      return unless block_given?
+      return self unless block_given?
 
       if block.arity == 1
         block.call(self)
       else
         instance_eval(&block)
       end
+
+      self
     end
 
     def get(path, options = {})

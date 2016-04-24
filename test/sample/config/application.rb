@@ -32,12 +32,13 @@ module Sample
     config.serviceworker.headers["X-Custom-Header"] = "foobar"
 
     config.serviceworker.routes.draw do
-      get "/basic-serviceworker.js"
+      get "/serviceworker.js"
 
       get "/nested/serviceworker.js",
         asset: "another/serviceworker.js"
 
-      get "/headers/serviceworker.js",
+      get "/header-serviceworker.js",
+        asset: "another/serviceworker.js",
         headers: { "X-Resource-Header" => "A resource" }
 
       get "/*/serviceworker.js",
