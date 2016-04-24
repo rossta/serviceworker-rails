@@ -41,8 +41,10 @@ module ServiceWorker
       logger.info "[#{self.class}] - #{msg}"
     end
 
+    # TODO
+    # provide non-rails handler as default
     def handler
-      @handler ||= @opts.fetch(:handler, ServiceWorker::Rails::Handler.new)
+      @handler ||= @opts.fetch(:handler)
     end
 
     def logger

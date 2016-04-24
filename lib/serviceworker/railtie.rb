@@ -6,6 +6,7 @@ module ServiceWorker
     config.serviceworker = ActiveSupport::OrderedOptions.new
     config.serviceworker.headers = {}
     config.serviceworker.routes = ServiceWorker::Router.new
+    config.serviceworker.handler = ServiceWorker::Rails::Handler.new
 
     initializer "serviceworker-rails.configure_rails_initialization" do
       config.serviceworker.logger ||= ::Rails.logger
