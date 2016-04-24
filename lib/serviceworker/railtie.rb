@@ -6,18 +6,11 @@ module ServiceWorker
   class Railtie < ::Rails::Railtie
     config.serviceworker = ActiveSupport::OrderedOptions.new
     config.serviceworker.headers = {}
+    config.serviceworker.routes = ServiceWorker::Router.new
 
     initializer "serviceworker-rails.configure_rails_initialization" do
       config.serviceworker.logger ||= ::Rails.logger
-      insert_middleware
-    end
-
-    def insert_middleware
-      if defined? ::Rack::SendFile
-        app.middleware.insert_after ::Rack::Sendfile, ServiceWorker::Middleware, config.serviceworker
-      else
-        app.middleware.use ServiceWorker::Middleware, config.serviceworker
-      end
+      app.middleware.use ServiceWorker::Middleware, config.serviceworker
     end
 
     def app

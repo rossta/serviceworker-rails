@@ -29,7 +29,20 @@ module Sample
     # Do not swallow errors in after_commit/after_rollback callbacks.
     # config.active_record.raise_in_transactional_callbacks = true
 
-    config.serviceworker.headers['X-Custom-Header'] = 'foobar'
+    config.serviceworker.headers["X-Custom-Header"] = "foobar"
+
+    config.serviceworker.routes.draw do
+      get "/basic-serviceworker.js"
+
+      get "/nested/serviceworker.js",
+        asset: "another/serviceworker.js"
+
+      get "/headers/serviceworker.js",
+        headers: { "X-Resource-Header" => "A resource" }
+
+      get "/*/serviceworker.js",
+        asset: "serviceworker.js"
+    end
   end
 end
 
