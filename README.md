@@ -52,7 +52,7 @@ config.serviceworker.routes.draw do
 end
 ```
 
-`Serviceworker-Rails` with insert a `Cache-Control` header to instruct browsers
+`Serviceworker::Rails` with insert a `Cache-Control` header to instruct browsers
 not to cache your serviceworkers by default. You can customize the headers for all service worker routes if you'd like,
 such as adding the experimental [`Service-Worker-Allowed`](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#service-worker-allowed) header to set the allowed scope.
 
