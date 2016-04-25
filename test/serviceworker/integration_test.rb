@@ -57,4 +57,15 @@ class ServiceWorker::IntegrationTest < Minitest::Test
       get "/not/found/service/worker.js"
     end
   end
+
+  def test_precompiled_serviceworker_request
+    Rails.application.config.assets.stub(:compile, false) do
+      get "/serviceworker.js"
+
+      assert last_response.ok?
+      assert_equal "application/javascript", last_response.headers["Content-Type"]
+      assert_equal "private, max-age=0, no-cache", last_response.headers["Cache-Control"]
+      assert_match %r{console.log\(.*'Hello from ServiceWorker!'.*\);}, last_response.body
+    end
+  end
 end

@@ -1,3 +1,5 @@
+require "rack/file"
+
 module ServiceWorker
   module Rails
     class Handler
@@ -18,7 +20,7 @@ module ServiceWorker
       end
 
       def file_server
-        @file_server ||= ::Rack::File.new(::Rails.root.join("public"))
+        @file_server ||= ::Rack::File.new(::Rails.public_path)
       end
 
       def config
