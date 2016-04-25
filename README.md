@@ -26,7 +26,40 @@ Or install it yourself as:
 
 ## Usage
 
-Currently, `serviceworker-rails` assumes your script resolves to `serviceworker.js`
+To use `serviceworker-rails` in a Rails app, install the gem as above. When
+`serviceworker-rails` is required, it will insert a middleware into the Rails
+middleware stack. You'll want to configure it by mapping serviceworker routes to
+Sprockets JavaScript assets, like the example below, in `application.rb`.
+
+```ruby
+# application.rb
+
+config.serviceworker.routes.draw do
+  get "/basic-serviceworker.js"
+
+  get "/proxied-serviceworker.js"
+    asset: "nested/asset/serviceworker.js"
+
+  get "/nested/serviceworker.js",
+    asset: "another/serviceworker.js"
+
+  get "/header-serviceworker.js",
+    asset: "another/serviceworker.js",
+    headers: { "X-Resource-Header" => "A resource" }
+
+  get "/*/serviceworker.js",
+    asset: "serviceworker.js"
+end
+```
+
+`Serviceworker-Rails` with insert a `Cache-Control` header to instruct browsers
+not to cache your serviceworkers by default. You can customize the headers for all service worker routes if you'd like,
+such as adding the experimental [`Service-Worker-Allowed`](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#service-worker-allowed) header to set the allowed scope.
+
+```ruby
+config.serviceworker.headers["Service-Worker-Allowed"] = "/"
+config.serviceworker.headers["X-Custom-Header"] = "foobar"
+```
 
 ## Development
 
