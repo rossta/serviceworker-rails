@@ -1,11 +1,11 @@
 # ServiceWorker::Rails
 
-Integrates ServiceWorker scripts with the Rails asset pipeline.
+Use [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) with the Rails asset pipeline.
 
 ## Features
 
-* Leverages Rails asset pipeline to compile service worker scripts
-* Adds appropriate response headers to service worker scripts
+* Maps service worker endpoints to Rails assets
+* Adds appropriate response headers to service workers
 * Renders compiled source in production and development
 
 ## Installation
