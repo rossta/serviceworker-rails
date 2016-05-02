@@ -59,6 +59,8 @@ config.serviceworker.headers["Service-Worker-Allowed"] = "/"
 config.serviceworker.headers["X-Custom-Header"] = "foobar"
 ```
 
+Check out the demo application, [Service Worker on Rails](https://serviceworker-rails.herokuapp.com/), to see various examples of using Service Workers in a Rails app.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
