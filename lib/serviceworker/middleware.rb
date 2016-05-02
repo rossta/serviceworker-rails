@@ -1,5 +1,10 @@
+# frozen_string_literal: true
 module ServiceWorker
   class Middleware
+    REQUEST_METHOD = "REQUEST_METHOD".freeze
+    GET = "GET".freeze
+    HEAD = "HEAD".freeze
+
     def initialize(app, opts = {})
       @app = app
       @opts = opts
@@ -8,12 +13,10 @@ module ServiceWorker
     end
 
     def call(env)
-      case env["REQUEST_METHOD"]
-      when "GET", "HEAD"
-        path = env["PATH_INFO"].chomp("/")
-        info("responding to #{path}")
-        route = @router.match_route(path)
-        return respond_to_route(route, env) if route
+      case env[REQUEST_METHOD]
+      when GET, HEAD
+        route_match = @router.match_route(env)
+        return respond_to_match(route_match, env) if route_match
       end
 
       @app.call(env)
@@ -27,14 +30,12 @@ module ServiceWorker
       }
     end
 
-    def respond_to_route(route, env)
-      status, headers, body = process_handler(route, env)
+    def respond_to_match(route_match, env)
+      env = env.merge("serviceworker.asset_name" => route_match.asset_name)
 
-      [status, headers.merge(@headers).merge(route.headers), body]
-    end
+      status, headers, body = handler.call(env)
 
-    def process_handler(route, env)
-      handler.call(env.merge("serviceworker.asset_name" => route.asset_name))
+      [status, headers.merge(@headers).merge(route_match.headers), body]
     end
 
     def info(msg)

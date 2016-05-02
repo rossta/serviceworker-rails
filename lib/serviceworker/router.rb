@@ -1,5 +1,8 @@
+# frozen_string_literal: true
 module ServiceWorker
   class Router
+    PATH_INFO = "PATH_INFO".freeze
+
     def self.default
       new.draw_default
     end
@@ -38,9 +41,14 @@ module ServiceWorker
       @routes.any?
     end
 
-    def match_route(path)
-      @routes.detect { |r| r.match?(path) }
+    def match_route(env)
+      path = env[PATH_INFO]
+      @routes.each do |route|
+        if match = route.match(path)
+          return match
+        end
+      end
+      nil
     end
   end
-
 end
