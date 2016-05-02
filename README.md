@@ -59,6 +59,8 @@ config.serviceworker.headers["Service-Worker-Allowed"] = "/"
 config.serviceworker.headers["X-Custom-Header"] = "foobar"
 ```
 
+### Demo
+
 Check out the demo application, [Service Worker on Rails](https://serviceworker-rails.herokuapp.com/), to see various examples of using Service Workers in a Rails app.
 
 ## Development
