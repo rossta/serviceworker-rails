@@ -31,11 +31,12 @@ module ServiceWorker
       draw { get "/serviceworker.js" }
     end
 
-    def get(path, options = {})
+    def match(path, options = {})
       Route.new(path, options).tap do |route|
         @routes << route
       end
     end
+    alias get match
 
     def any?
       @routes.any?

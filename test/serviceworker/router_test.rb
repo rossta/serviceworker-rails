@@ -10,7 +10,14 @@ class ServiceWorker::RouterTest < Minitest::Test
     refute @router.any?
   end
 
-  def test_get_adds_route
+  def test_match_adds_route
+    route = @router.match("/path", foo: "bar")
+
+    assert_equal route.path_pattern, "/path"
+    assert_equal route.options, { foo: "bar" }
+  end
+
+  def test_get_aliased_to_match
     route = @router.get("/path", foo: "bar")
 
     assert_equal route.path_pattern, "/path"
@@ -19,8 +26,8 @@ class ServiceWorker::RouterTest < Minitest::Test
 
   def test_draw_adds_given_routes
     @router.draw do
-      get "/foo"
-      get "/bar"
+      match "/foo"
+      match "/bar"
     end
     paths = @router.routes.map(&:path_pattern)
 
@@ -36,8 +43,8 @@ class ServiceWorker::RouterTest < Minitest::Test
 
   def test_match_route_matches
     @router.draw do
-      get "/foo"
-      get "/bar"
+      match "/foo"
+      match "/bar"
     end
 
     assert_equal @router.match_route("PATH_INFO" => "/foo").to_a, ["/foo", "foo", {}]
@@ -46,8 +53,8 @@ class ServiceWorker::RouterTest < Minitest::Test
 
   def test_match_route_doesnt_match
     @router.draw do
-      get "/foo"
-      get "/bar"
+      match "/foo"
+      match "/bar"
     end
 
     refute @router.match_route("PATH_INFO" => "/not/found")
