@@ -1,5 +1,4 @@
 require "test_helper"
-require "pry"
 
 class ServiceWorker::RouteTest < Minitest::Test
   def test_initialize_route
