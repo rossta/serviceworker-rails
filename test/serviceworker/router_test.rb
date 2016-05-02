@@ -13,15 +13,23 @@ class ServiceWorker::RouterTest < Minitest::Test
   def test_match_adds_route
     route = @router.match("/path", foo: "bar")
 
-    assert_equal route.path_pattern, "/path"
-    assert_equal route.options, { foo: "bar" }
+    assert_equal "/path", route.path_pattern
+    assert_equal({ foo: "bar" }, route.options)
   end
 
   def test_get_aliased_to_match
     route = @router.get("/path", foo: "bar")
 
-    assert_equal route.path_pattern, "/path"
-    assert_equal route.options, { foo: "bar" }
+    assert_equal "/path", route.path_pattern
+    assert_equal({ foo: "bar" }, route.options)
+  end
+
+  def test_match_adds_route_with_asset_mapping
+    route = @router.match("/path" => "foo.js", foo: "bar")
+
+    assert_equal "/path", route.path_pattern
+    assert_equal "foo.js", route.asset_pattern
+    assert_equal({ foo: "bar" }, route.options)
   end
 
   def test_draw_adds_given_routes

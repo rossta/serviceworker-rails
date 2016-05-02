@@ -31,8 +31,14 @@ module ServiceWorker
       draw { get "/serviceworker.js" }
     end
 
-    def match(path, options = {})
-      Route.new(path, options).tap do |route|
+    def match(path, *args)
+      if path.is_a?(Hash)
+        opts = path.to_a
+        path, asset = opts.shift
+        args = [asset, opts.to_h]
+      end
+
+      Route.new(path, *args).tap do |route|
         @routes << route
       end
     end
