@@ -10,47 +10,61 @@ class ServiceWorker::RouterTest < Minitest::Test
     refute @router.any?
   end
 
-  def test_get_adds_route
+  def test_match_adds_route
+    route = @router.match("/path", foo: "bar")
+
+    assert_equal "/path", route.path_pattern
+    assert_equal({ foo: "bar" }, route.options)
+  end
+
+  def test_get_aliased_to_match
     route = @router.get("/path", foo: "bar")
 
-    assert_equal route.path, "/path"
-    assert_equal route.options, { foo: "bar" }
+    assert_equal "/path", route.path_pattern
+    assert_equal({ foo: "bar" }, route.options)
+  end
+
+  def test_match_adds_route_with_asset_mapping
+    route = @router.match("/path" => "foo.js", foo: "bar")
+
+    assert_equal "/path", route.path_pattern
+    assert_equal "foo.js", route.asset_pattern
+    assert_equal({ foo: "bar" }, route.options)
   end
 
   def test_draw_adds_given_routes
     @router.draw do
-      get "/foo"
-      get "/bar"
+      match "/foo"
+      match "/bar"
     end
-    paths = @router.routes.map(&:path)
+    paths = @router.routes.map(&:path_pattern)
 
     assert_equal paths, ["/foo", "/bar"]
   end
 
   def test_draw_default
     @router.draw_default
-    paths = @router.routes.map(&:path)
+    paths = @router.routes.map(&:path_pattern)
 
     assert_equal paths, ["/serviceworker.js"]
   end
 
   def test_match_route_matches
     @router.draw do
-      get "/foo"
-      get "/bar"
+      match "/foo"
+      match "/bar"
     end
-    foo, bar = @router.routes
 
-    assert_equal @router.match_route("/foo"), foo
-    assert_equal @router.match_route("/bar"), bar
+    assert_equal @router.match_route("PATH_INFO" => "/foo").to_a, ["/foo", "foo", {}]
+    assert_equal @router.match_route("PATH_INFO" => "/bar").to_a, ["/bar", "bar", {}]
   end
 
   def test_match_route_doesnt_match
     @router.draw do
-      get "/foo"
-      get "/bar"
+      match "/foo"
+      match "/bar"
     end
 
-    refute @router.match_route("/not/found")
+    refute @router.match_route("PATH_INFO" => "/not/found")
   end
 end

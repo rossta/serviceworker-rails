@@ -1,5 +1,7 @@
 # ServiceWorker::Rails
 
+[![Build Status](https://travis-ci.org/rossta/serviceworker-rails.svg?branch=master)](https://travis-ci.org/rossta/serviceworker-rails)
+
 Use [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) with the Rails asset pipeline.
 
 ## Features
@@ -35,20 +37,16 @@ Sprockets JavaScript assets, like the example below, in `application.rb`.
 # application.rb
 
 config.serviceworker.routes.draw do
-  get "/basic-serviceworker.js"
+  match "/basic-serviceworker.js"
 
-  get "/proxied-serviceworker.js"
-    asset: "nested/asset/serviceworker.js"
+  match "/proxied-serviceworker.js" => "nested/asset/serviceworker.js"
 
-  get "/nested/serviceworker.js",
-    asset: "another/serviceworker.js"
+  match "/nested/serviceworker.js" => "another/serviceworker.js"
 
-  get "/header-serviceworker.js",
-    asset: "another/serviceworker.js",
+  match "/header-serviceworker.js" => "another/serviceworker.js",
     headers: { "X-Resource-Header" => "A resource" }
 
-  get "/*/serviceworker.js",
-    asset: "serviceworker.js"
+  match "/*/serviceworker.js" => "serviceworker.js"
 end
 ```
 

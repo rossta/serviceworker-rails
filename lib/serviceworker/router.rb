@@ -1,5 +1,8 @@
+# frozen_string_literal: true
 module ServiceWorker
   class Router
+    PATH_INFO = "PATH_INFO".freeze
+
     def self.default
       new.draw_default
     end
@@ -28,19 +31,31 @@ module ServiceWorker
       draw { get "/serviceworker.js" }
     end
 
-    def get(path, options = {})
-      Route.new(path, options).tap do |route|
+    def match(path, *args)
+      if path.is_a?(Hash)
+        opts = path.to_a
+        path, asset = opts.shift
+        args = [asset, opts.to_h]
+      end
+
+      Route.new(path, *args).tap do |route|
         @routes << route
       end
     end
+    alias get match
 
     def any?
       @routes.any?
     end
 
-    def match_route(path)
-      @routes.detect { |r| r.match?(path) }
+    def match_route(env)
+      path = env[PATH_INFO]
+      @routes.each do |route|
+        if match = route.match(path)
+          return match
+        end
+      end
+      nil
     end
   end
-
 end
