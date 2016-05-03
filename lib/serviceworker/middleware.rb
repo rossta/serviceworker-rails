@@ -14,7 +14,7 @@ module ServiceWorker
 
     def call(env)
       case env[REQUEST_METHOD]
-      when GET, HEAD
+        when GET, HEAD
         route_match = @router.match_route(env)
         return respond_to_match(route_match, env) if route_match
       end
@@ -22,7 +22,7 @@ module ServiceWorker
       @app.call(env)
     end
 
-    private
+  private
 
     def default_headers
       {

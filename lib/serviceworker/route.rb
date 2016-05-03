@@ -20,9 +20,7 @@ module ServiceWorker
     end
 
     def match(path)
-      if path.to_s.strip.empty?
-        raise ArgumentError.new("path is required")
-      end
+      raise ArgumentError, "path is required" if path.to_s.strip.empty?
 
       asset = resolver.call(path) or return nil
 
@@ -40,11 +38,11 @@ module ServiceWorker
     end
 
     class AssetResolver
-      PATH_INFO = 'PATH_INFO'.freeze
+      PATH_INFO = "PATH_INFO".freeze
       DEFAULT_WILDCARD_NAME = :paths
-      WILDCARD_PATTERN = /\/\*([^\/]*)/.freeze
-      NAMED_SEGMENTS_PATTERN = /\/([^\/]*):([^:$\/]+)/.freeze
-      LEADING_SLASH_PATTERN = /^\//
+      WILDCARD_PATTERN = %r{\/\*([^\/]*)}
+      NAMED_SEGMENTS_PATTERN = %r{\/([^\/]*):([^:$\/]+)}
+      LEADING_SLASH_PATTERN = %r{^\/}
       INTERPOLATION_PATTERN = Regexp.union(
         /%%/,
         /%\{(\w+)\}/, # matches placeholders like "%{foo}"
@@ -58,9 +56,7 @@ module ServiceWorker
       end
 
       def call(path)
-        if path.to_s.strip.empty?
-          raise ArgumentError.new("path is required")
-        end
+        raise ArgumentError, "path is required" if path.to_s.strip.empty?
 
         captures = path_captures(regexp, path) or return nil
 
@@ -78,15 +74,16 @@ module ServiceWorker
       end
 
       def compiled_source(pattern)
-        if pattern_match = pattern.match(WILDCARD_PATTERN)
+        pattern_match = pattern.match(WILDCARD_PATTERN)
+        if pattern_match
           @wildcard_name = if pattern_match[1].to_s.strip.empty?
                              DEFAULT_WILDCARD_NAME
                            else
                              pattern_match[1].to_sym
                            end
-          pattern.gsub(WILDCARD_PATTERN,'(?:/(.*)|)')
+          pattern.gsub(WILDCARD_PATTERN, "(?:/(.*)|)")
         else
-          p = if pattern_match = pattern.match(NAMED_SEGMENTS_PATTERN)
+          p = if pattern.match(NAMED_SEGMENTS_PATTERN)
                 pattern.gsub(NAMED_SEGMENTS_PATTERN, '/\1(?<\2>[^.$/]+)')
               else
                 pattern
@@ -96,29 +93,25 @@ module ServiceWorker
       end
 
       def path_captures(regexp, path)
-        return nil unless path_match = path.match(regexp)
+        path_match = path.match(regexp) or return nil
         params = if @wildcard_name
-                   { @wildcard_name => path_match[1].to_s.split('/') }
+                   { @wildcard_name => path_match[1].to_s.split("/") }
                  else
                    Hash[path_match.names.map(&:to_sym).zip(path_match.captures)]
                  end
-        params.delete(:format) if params.has_key?(:format) && params[:format].nil?
+        params.delete(:format) if params.key?(:format) && params[:format].nil?
         params
       end
 
       def interpolate_captures(string, captures)
         string.gsub(INTERPOLATION_PATTERN) do |match|
-          if match == '%%'
-            '%'
+          if match == "%%"
+            "%"
           else
-            key = ($1 || $2).to_sym
-            value = if captures.key?(key)
-                      Array(captures[key]).join("/")
-                    else
-                      raise "Interpolation error: #{key} not captured in #{captures.inspect}"
-                    end
+            key = (Regexp.last_match(1) || Regexp.last_match(2)).to_sym
+            value = captures.key?(key) ? Array(captures[key]).join("/") : key
             value = value.call(captures) if value.respond_to?(:call)
-            $3 ? sprintf("%#{$3}", value) : value
+            Regexp.last_match(3) ? format("%#{Regexp.last_match(3)}", value) : value
           end
         end.gsub(LEADING_SLASH_PATTERN, "")
       end

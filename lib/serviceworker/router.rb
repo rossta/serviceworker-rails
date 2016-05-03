@@ -19,7 +19,7 @@ module ServiceWorker
       return self unless block_given?
 
       if block.arity == 1
-        block.call(self)
+        yield(self)
       else
         instance_eval(&block)
       end
@@ -51,9 +51,7 @@ module ServiceWorker
     def match_route(env)
       path = env[PATH_INFO]
       @routes.each do |route|
-        if match = route.match(path)
-          return match
-        end
+        match = route.match(path) and return match
       end
       nil
     end

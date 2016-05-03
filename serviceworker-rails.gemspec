@@ -1,7 +1,7 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
+lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'serviceworker/rails/version'
+require "serviceworker/rails/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "serviceworker-rails"
@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Ross Kaffenberger"]
   spec.email         = ["rosskaff@gmail.com"]
 
-  spec.summary       = %q{ServiceWorker for Rails 3+}
-  spec.description   = %q{Integrates ServiceWorker into the Rails asset pipeline.}
+  spec.summary       = "ServiceWorker for Rails 3+"
+  spec.description   = "Integrates ServiceWorker into the Rails asset pipeline."
   spec.homepage      = "https://github.com/rossta/serviceworker-rails"
   spec.license       = "MIT"
 
