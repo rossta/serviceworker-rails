@@ -1,4 +1,4 @@
-require File.expand_path('../boot', __FILE__)
+require File.expand_path("../boot", __FILE__)
 
 require "rails"
 # Pick the frameworks you want:
@@ -32,4 +32,3 @@ module Sample
     config.serviceworker.headers["X-Custom-Header"] = "foobar"
   end
 end
-

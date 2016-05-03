@@ -13,7 +13,7 @@ class ServiceWorker::IntegrationTest < Minitest::Test
 
   def test_homepage
     assert last_response.ok?
-    assert_match %r{Hello, World}, last_response.body
+    assert_match(/Hello, World/, last_response.body)
   end
 
   def test_serviceworker_route
@@ -22,7 +22,7 @@ class ServiceWorker::IntegrationTest < Minitest::Test
     assert last_response.ok?
     assert_equal "application/javascript", last_response.headers["Content-Type"]
     assert_equal "private, max-age=0, no-cache", last_response.headers["Cache-Control"]
-    assert_match %r{console.log\(.*'Hello from ServiceWorker!'.*\);}, last_response.body
+    assert_match(/console.log\(.*'Hello from ServiceWorker!'.*\);/, last_response.body)
   end
 
   def test_custom_header
@@ -35,26 +35,26 @@ class ServiceWorker::IntegrationTest < Minitest::Test
     get "/nested/serviceworker.js"
 
     assert last_response.ok?
-    assert_match %r{console.log\(.*'Hello from Another ServiceWorker!'.*\);}, last_response.body
+    assert_match(/console.log\(.*'Hello from Another ServiceWorker!'.*\);/, last_response.body)
   end
 
   def test_inline_header_serviceworker_route
     get "/header-serviceworker.js"
 
     assert last_response.ok?
-    assert_match %r{console.log\(.*'Hello from Another ServiceWorker!'.*\);}, last_response.body
+    assert_match(/console.log\(.*'Hello from Another ServiceWorker!'.*\);/, last_response.body)
   end
 
   def test_captured_serviceworker
     get "/captures/foo/serviceworker.js"
 
     assert last_response.ok?
-    assert_match %r{console.log\(.*'Hello from Foo ServiceWorker!'.*\);}, last_response.body
+    assert_match(/console.log\(.*'Hello from Foo ServiceWorker!'.*\);/, last_response.body)
 
     get "/captures/bar/serviceworker.js"
 
     assert last_response.ok?
-    assert_match %r{console.log\(.*'Hello from Bar ServiceWorker!'.*\);}, last_response.body
+    assert_match(/console.log\(.*'Hello from Bar ServiceWorker!'.*\);/, last_response.body)
 
     assert_raises ActionController::RoutingError do
       get "/captures/foobar/service/worker.js"
@@ -65,7 +65,7 @@ class ServiceWorker::IntegrationTest < Minitest::Test
     get "/catchall/serviceworker.js"
 
     assert last_response.ok?
-    assert_match %r{console.log\(.*'Hello from Fallback ServiceWorker!'.*\);}, last_response.body
+    assert_match(/console.log\(.*'Hello from Fallback ServiceWorker!'.*\);/, last_response.body)
   end
 
   def test_not_found_serviceworker_proxy
@@ -81,7 +81,7 @@ class ServiceWorker::IntegrationTest < Minitest::Test
       assert last_response.ok?
       assert_equal "application/javascript", last_response.headers["Content-Type"]
       assert_equal "private, max-age=0, no-cache", last_response.headers["Cache-Control"]
-      assert_match %r{console.log\(.*'Hello from ServiceWorker!'.*\);}, last_response.body
+      assert_match(/console.log\(.*'Hello from ServiceWorker!'.*\);/, last_response.body)
     end
   end
 end

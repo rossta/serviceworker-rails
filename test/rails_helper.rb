@@ -1,7 +1,7 @@
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
-require File.expand_path("../../test/sample/config/environment.rb",  __FILE__)
+require File.expand_path("../../test/sample/config/environment.rb", __FILE__)
 
 require "test_helper"
 
