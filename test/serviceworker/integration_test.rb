@@ -49,7 +49,7 @@ class ServiceWorker::IntegrationTest < Minitest::Test
     get "/catchall/serviceworker.js"
 
     assert last_response.ok?
-    assert_match %r{console.log\(.*'Hello from ServiceWorker!'.*\);}, last_response.body
+    assert_match %r{console.log\(.*'Hello from Fallback ServiceWorker!'.*\);}, last_response.body
   end
 
   def test_not_found_serviceworker_proxy
