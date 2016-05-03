@@ -16,7 +16,7 @@ class ServiceWorker::IntegrationTest < Minitest::Test
     assert_match %r{Hello, World}, last_response.body
   end
 
-  def test_serviceworker_request
+  def test_serviceworker_route
     get "/serviceworker.js"
 
     assert last_response.ok?
@@ -31,18 +31,34 @@ class ServiceWorker::IntegrationTest < Minitest::Test
     assert_equal "foobar", last_response.headers["X-Custom-Header"]
   end
 
-  def test_nested_serviceworker_proxy
+  def test_nested_serviceworker_route
     get "/nested/serviceworker.js"
 
     assert last_response.ok?
     assert_match %r{console.log\(.*'Hello from Another ServiceWorker!'.*\);}, last_response.body
   end
 
-  def test_inline_header_serviceworker_proxy
+  def test_inline_header_serviceworker_route
     get "/header-serviceworker.js"
 
     assert last_response.ok?
     assert_match %r{console.log\(.*'Hello from Another ServiceWorker!'.*\);}, last_response.body
+  end
+
+  def test_captured_serviceworker
+    get "/captures/foo/serviceworker.js"
+
+    assert last_response.ok?
+    assert_match %r{console.log\(.*'Hello from Foo ServiceWorker!'.*\);}, last_response.body
+
+    get "/captures/bar/serviceworker.js"
+
+    assert last_response.ok?
+    assert_match %r{console.log\(.*'Hello from Bar ServiceWorker!'.*\);}, last_response.body
+
+    assert_raises ActionController::RoutingError do
+      get "/captures/foobar/service/worker.js"
+    end
   end
 
   def test_globbed_serviceworker_proxy
