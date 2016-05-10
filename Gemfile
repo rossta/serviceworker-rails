@@ -5,8 +5,10 @@ gemspec
 
 group :development, :test do
   gem "rubocop"
+
   unless ENV["TRAVIS"]
-    gem "pry-byebug", platforms: [:ruby_23]
+    gem "pry"
+    gem "pry-byebug", platforms: [:mri]
     gem "guard"
     gem "guard-minitest"
   end
