@@ -4,7 +4,7 @@ source "https://rubygems.org"
 gemspec
 
 group :development, :test do
-  gem "rubocop"
+  gem "rubocop", "0.39.0"
 
   unless ENV["TRAVIS"]
     gem "pry"
