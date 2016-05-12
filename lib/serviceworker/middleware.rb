@@ -5,6 +5,15 @@ module ServiceWorker
     GET = "GET".freeze
     HEAD = "HEAD".freeze
 
+    # Initialize the Rack middleware for responding to serviceworker asset
+    # requests
+    #
+    # @app [#call] middleware stack
+    # @opts [Hash] options to inject
+    # @param opts [#match_route] :routes matches routes on PATH_INFO
+    # @param opts [Hash] :headers default headers to use for matched routes
+    # @param opts [#call] :handler resolves response from matched asset name
+    # @param opts [#info] :logger logs requests
     def initialize(app, opts = {})
       @app = app
       @opts = opts
