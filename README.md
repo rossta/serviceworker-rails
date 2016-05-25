@@ -34,7 +34,7 @@ middleware stack. You'll want to configure it by mapping serviceworker routes to
 Sprockets JavaScript assets, like the example below, in `application.rb`.
 
 ```ruby
-# config/initializers/serviceworker.rb
+# config/application.rb
 
 Rails.application.configure do
   config.serviceworker.routes.draw do
