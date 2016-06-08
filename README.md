@@ -70,6 +70,43 @@ config.serviceworker.headers["Service-Worker-Allowed"] = "/"
 config.serviceworker.headers["X-Custom-Header"] = "foobar"
 ```
 
+### Tutorial
+
+Not sure how to start? This section is for you. 
+
+Let's add a `ServiceWorker` to cache your `application.js` and `application.css` assets. We'll assume you already have a Rails application and use the asset pipeline to manage your JavaScript and CSS assets. 
+
+Add `serviceworker-rails` to your `Gemfile` [as described above](#installation) and run `$ bundle install`.
+
+Create a JavaScript file called `app/assets/javascripts/serviceworker.js.erb`:
+
+```javascript
+// app/assets/javascripts/serviceworker.js.erb
+
+self.addEventListener('install', function onInstall(event) {
+  event.waitUntil(
+    caches.open('cached-assets').then(function prefill(cache) {
+      return cache.addAll([
+        '<%= asset_path "application.js" %>',
+        '<%= asset_path "application.css" %>',
+      ]);
+    })
+  );
+});
+```
+
+Add a snippet of Ruby in `config/application.rb` as show below. This can also go in a new initializer file like `config/initializers/serviceworker.rb`.
+
+```ruby
+# config/application.rb
+
+Rails.application.configure do
+  config.serviceworker.routes.draw do
+    match "/serviceworker.js"
+  end
+end  
+```
+
 ### Demo
 
 Check out the demo application, [Service Worker on Rails](https://serviceworker-rails.herokuapp.com/), to see various examples of using Service Workers in a Rails app.
