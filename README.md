@@ -95,6 +95,21 @@ self.addEventListener('install', function onInstall(event) {
 });
 ```
 
+You'll need to register the service worker with a companion script in your main page JavaScript, like `application.js`. You can use the following:
+
+```javascript
+// app/assets/application.js
+
+// rest of your js ...
+
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register('/serviceworker.js', { scope: './' })
+    .then(function(reg) {
+      console.log('Service worker registered!');
+    });
+}
+```
+
 Add a snippet of Ruby in `config/application.rb` as show below. This can also go in a new initializer file like `config/initializers/serviceworker.rb`.
 
 ```ruby
@@ -106,6 +121,9 @@ Rails.application.configure do
   end
 end  
 ```
+
+At this point, you should be able to restart your Rails app and see your serviceworker install and activate.
+
 
 ### Demo
 
