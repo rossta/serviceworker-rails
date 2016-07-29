@@ -70,6 +70,18 @@ config.serviceworker.headers["Service-Worker-Allowed"] = "/"
 config.serviceworker.headers["X-Custom-Header"] = "foobar"
 ```
 
+Finally, for use in production, instruct Sprockets to precompile service worker scripts separately from `application.js`, as in the following example:
+
+```ruby
+# config/initializers/assets.rb
+
+Rails.application.configure do
+  config.assets.precompile += %w[
+    serviceworker.js
+  ]
+end
+```
+
 ### Tutorial
 
 Not sure how to start? This section is for you. 
