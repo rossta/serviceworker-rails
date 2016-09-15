@@ -17,8 +17,10 @@ with requests and responses within `/assets/`<em>**</em>. This is not what we wa
 
 * [MDN states](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API#Download_install_and_activate) browsers check for updated service worker scripts in the background every 24 hours (possibly less). Rails developers wouldn't be able to take advantage of this feature since the fingerprint strategy means assets at a given url are immutable. Beside fingerprintings, the `Cache-Control` headers used for static files served from Rails also work against browser's treatment of service workers.
 
-Check out the [blog post](https://rossta.net/blog/service-worker-on-rails.html)
-for more background.
+We want Sprockets to compile service worker JavaScript from ES6/7, CoffeeScript, ERB, etc. but must remove the caching and scoping mechanisms offered by Rails asset pipeline defaults. This is where `serviceworker-rails` comes in.
+
+*Check out the [blog post](https://rossta.net/blog/service-worker-on-rails.html)
+for more background.*
 
 ## Features
 
