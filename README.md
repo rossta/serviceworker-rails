@@ -4,6 +4,22 @@
 
 Use [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) with the Rails asset pipeline.
 
+## Why?
+
+The Rails asset pipeline makes a number of assumptions about what's best for deploying JavaScript, including asset digest fingerprints and long-lived cache headers - mostly to increase "cacheability". Rails also assumes a single parent directory, `/public/assets`, to make it easier to look up the file path for a given asset.
+
+Service worker assets must play by different rules. Consider these behaviors:
+
+* Service workers may only be active from within the scope from which they are
+served. So if you try to register a service worker from a Rails asset pipeline
+path, like `/assets/serviceworker-abcd1234.js`, it will only be able to interact
+with requests and responses within `/assets/`<em>**</em>. This is not what we want.
+
+* [MDN states](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API#Download_install_and_activate) browsers check for updated service worker scripts in the background every 24 hours (possibly less). Rails developers wouldn't be able to take advantage of this feature since the fingerprint strategy means assets at a given url are immutable. Beside fingerprintings, the `Cache-Control` headers used for static files served from Rails also work against browser's treatment of service workers.
+
+Check out the [blog post](https://rossta.net/blog/service-worker-on-rails.html)
+for more background.
+
 ## Features
 
 * Maps service worker endpoints to Rails assets
@@ -86,11 +102,11 @@ end
 
 ### Tutorial
 
-Not sure how to start? This section is for you. 
+Not sure how to start? This section is for you.
 
-Let's add a `ServiceWorker` to cache some of your JavaScript and CSS assets. We'll assume you already have a Rails application using the asset pipeline built on Sprockets. 
+Let's add a `ServiceWorker` to cache some of your JavaScript and CSS assets. We'll assume you already have a Rails application using the asset pipeline built on Sprockets.
 
-##### Setup
+#### Setup
 
 Add `serviceworker-rails` to your `Gemfile` [as described above](#installation) and run `$ bundle install`.
 
@@ -137,7 +153,7 @@ Rails.application.configure do
   config.serviceworker.routes.draw do
     match "/serviceworker.js"
   end
-end  
+end
 ```
 
 At this point, restart your Rails app and reload a page in your app in Chrome or Firefox. Using dev tools, you should be able to determine.
