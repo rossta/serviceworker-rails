@@ -22,6 +22,11 @@ We want Sprockets to compile service worker JavaScript from ES6/7, CoffeeScript,
 *Check out the [blog post](https://rossta.net/blog/service-worker-on-rails.html)
 for more background.*
 
+### Demo
+
+See various examples of using Service Workers in the demo Rails app, [Service Worker Rails Sandbox](https://serviceworker-rails.herokuapp.com/). The [source code](https://github.com/rossta/serviceworker-rails-sandbox) is also on GitHub.
+
+
 ## Features
 
 * Maps service worker endpoints to Rails assets
@@ -172,10 +177,6 @@ So far so good? At this point, all we've done is pre-fetched assets and added th
 Now, we can use the service worker to intercept requests and either serve them from the cache if they exist there or fallback to the network response otherwise. In most cases, we can expect responses coming from the local cache to be much faster than those coming from the network.
 
 (...more coming soon, WIP)
-
-### Demo
-
-Check out the demo application, [Service Worker on Rails](https://serviceworker-rails.herokuapp.com/), to see various examples of using Service Workers in a Rails app.
 
 ## Development
 
