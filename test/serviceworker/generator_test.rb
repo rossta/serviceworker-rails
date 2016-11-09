@@ -47,8 +47,8 @@ class ServiceWorker::GeneratorTest < Minitest::Test
   end
 
   def test_generates_serviceworker
-    serviceworker_js = IO.read("#{sample_app_path}/app/assets/javascripts/serviceworker.js")
-    companion_js = IO.read("#{sample_app_path}/app/assets/javascripts/serviceworker-companion.js")
+    serviceworker_js = File.read("#{sample_app_path}/app/assets/javascripts/serviceworker.js")
+    companion_js = File.read("#{sample_app_path}/app/assets/javascripts/serviceworker-companion.js")
 
     assert serviceworker_js =~ /self.addEventListener\('install', onInstall\)/,
       "Expected serviceworker to be generated"
@@ -57,35 +57,35 @@ class ServiceWorker::GeneratorTest < Minitest::Test
   end
 
   def test_generates_initializer
-    initializer_rb = IO.read("#{sample_app_path}/config/initializers/serviceworker.rb")
+    initializer_rb = File.read("#{sample_app_path}/config/initializers/serviceworker.rb")
 
     assert initializer_rb =~ /config.serviceworker.routes.draw/,
       "Expected initializer to be generated"
   end
 
   def test_generates_manifest
-    manifest_json = IO.read("#{sample_app_path}/app/assets/javascripts/manifest.json")
+    manifest_json = File.read("#{sample_app_path}/app/assets/javascripts/manifest.json")
 
     assert manifest_json =~ /"name": "My Progressive Rails App"/,
       "Expected manifest to be generated"
   end
 
   def test_appends_precompilation
-    precompilation_rb = IO.read("#{sample_app_path}/config/initializers/assets.rb")
+    precompilation_rb = File.read("#{sample_app_path}/config/initializers/assets.rb")
 
     assert precompilation_rb =~ /Rails.configuration.assets.precompile \+\= \%w\[serviceworker.js\]/,
       "Expected asset to be precompiled"
   end
 
   def test_appends_companion_require
-    application_js = IO.read("#{sample_app_path}/app/assets/javascripts/application.js")
+    application_js = File.read("#{sample_app_path}/app/assets/javascripts/application.js")
 
     assert application_js =~ %r{\n\/\/= require serviceworker-companion},
       "Expected companion to be required"
   end
 
   def test_appends_manifest_link
-    application_layout = IO.read("#{sample_app_path}/app/views/layouts/application.html.erb")
+    application_layout = File.read("#{sample_app_path}/app/views/layouts/application.html.erb")
 
     assert application_layout =~ %r{\<link rel="manifest" href="/manifest.json" \/\>},
       "Expected manifest to be linked"
