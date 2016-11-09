@@ -42,7 +42,7 @@ class ServiceWorker::GeneratorTest < Minitest::Test
   create_generator_sample_app
   install_serviceworker_rails
 
-  MiniTest::Unit.after_tests do
+  Minitest.after_run do
     remove_generator_sample_app
   end
 
