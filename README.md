@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/rossta/serviceworker-rails.svg?branch=master)](https://travis-ci.org/rossta/serviceworker-rails)
 
-Use [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) with the Rails asset pipeline.
+Turn your Rails app into a Progressive Web App. Use [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) with the Rails asset pipeline.
 
 ## Why?
 
@@ -26,7 +26,6 @@ for more background.*
 
 See various examples of using Service Workers in the demo Rails app, [Service Worker Rails Sandbox](https://serviceworker-rails.herokuapp.com/). The [source code](https://github.com/rossta/serviceworker-rails-sandbox) is also on GitHub.
 
-
 ## Features
 
 * Maps service worker endpoints to Rails assets
@@ -49,15 +48,142 @@ Or install it yourself as:
 
     $ gem install serviceworker-rails
 
-## Usage
+To set up your Rails project for use with a Service Worker, you either use the
+Rails generator and edit the generated files as needed, or you can follow the
+manual installation steps.
 
-To use `serviceworker-rails` in a Rails app, install the gem as above. When
-`serviceworker-rails` is required, it will insert a middleware into the Rails
-middleware stack. You'll want to configure it by mapping serviceworker routes to
-Sprockets JavaScript assets, like the example below, in `application.rb`.
+### Automated setup
+
+After bundling the gem in your Rails project, run the generator from the root of
+your Rails project.
+
+```
+$ rails g serviceworker:install
+```
+
+### Manual setup
+
+Let's add a `ServiceWorker` to cache some of your JavaScript and CSS assets. We'll assume you already have a Rails application using the asset pipeline built on Sprockets.
+
+#### Add a service worker script
+
+Create a JavaScript file called `app/assets/javascripts/serviceworker.js.erb`:
+
+```javascript
+// app/assets/javascripts/serviceworker.js.erb
+console.log('[Service Worker] Hello world!');
+
+function onInstall(event) {
+  event.waitUntil(
+    caches.open('cached-assets').then(function prefill(cache) {
+      return cache.addAll([
+        '<%= asset_path "application.js" %>',
+        '<%= asset_path "application.css" %>',
+        '<%= asset_path "admin.css" %>',
+        // you get the idea ...
+      ]);
+    })
+  );
+}
+
+self.addEventListener('install', onInstall)
+```
+
+For use in production, instruct Sprockets to precompile service worker scripts separately from `application.js`, as in the following example:
+
+#### Precompile the asset
 
 ```ruby
-# config/application.rb
+# config/initializers/assets.rb
+
+Rails.application.configure do
+  config.assets.precompile += %w[
+    serviceworker.js
+  ]
+end
+```
+
+#### Register the service worker
+
+You'll need to register the service worker with a companion script in your main page JavaScript, like `application.js`. You can use the following:
+
+```javascript
+// app/assets/javascripts/serviceworker-companion.js
+
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register('/serviceworker.js', { scope: './' })
+    .then(function(reg) {
+      console.log('[Page] Service worker registered!');
+    });
+}
+
+// app/assets/javascripts/application.js
+
+// ...
+//= require serviceworker-companion
+```
+
+#### Add a manifest
+
+You may also want to create a `manifest.json` file to make your web app installable.
+
+```
+// manifest.json
+{
+  "name": "My Rails App"
+  "name": "My Progressive Rails App",
+  "short_name": "Progressive",
+  "start_url": "/"
+}
+```
+
+You'd then link to your manifest from the application layout:
+
+```html
+<link rel="manifest" href="/manifest.json" />
+```
+
+#### Configure the middleware
+
+Next, add a new initializer as show below to instruct the `serviceworker-rails`
+middleware how to route requests for assets by canonical url.
+
+```ruby
+# config/initializers/serviceworker.rb
+
+Rails.application.configure do
+  config.serviceworker.routes.draw do
+    match "/serviceworker.js"
+    match "/manifest.json"
+  end
+end
+```
+
+#### Test the setup
+
+At this point, restart your Rails app and reload a page in your app in Chrome or Firefox. Using dev tools, you should be able to determine.
+
+1. The page requests a service worker at `/serviceworker.js`
+2. The Rails app responds to the request by compiling and rendering the file in `app/assets/javascripts/serviceworker.js.erb`.
+3. The console displays messages from the page and the service worker
+4. The application JavaScript and CSS assets are added to the browser's request/response [Cache](https://developer.mozilla.org/en-US/docs/Web/API/Cache).
+
+#### Using the cache
+
+So far so good? At this point, all we've done is pre-fetched assets and added them to the cache, but we're not doing anything with them yet.
+
+Now, we can use the service worker to intercept requests and either serve them from the cache if they exist there or fallback to the network response otherwise. In most cases, we can expect responses coming from the local cache to be much faster than those coming from the network.
+
+(...more coming soon, WIP)
+
+## Configuration
+
+When `serviceworker-rails` is required in your Gemfile, it will insert a middleware into the Rails
+middleware stack. You'll want to configure it by mapping serviceworker routes to
+Sprockets JavaScript assets in an initializer, like the example below.
+
+```ruby
+# config/initializers/serviceworker.rb
 
 Rails.application.configure do
   config.serviceworker.routes.draw do
@@ -92,91 +218,6 @@ such as adding the experimental [`Service-Worker-Allowed`](https://slightlyoff.g
 config.serviceworker.headers["Service-Worker-Allowed"] = "/"
 config.serviceworker.headers["X-Custom-Header"] = "foobar"
 ```
-
-### Precompilation
-
-For use in production, instruct Sprockets to precompile service worker scripts separately from `application.js`, as in the following example:
-
-```ruby
-# config/initializers/assets.rb
-
-Rails.application.configure do
-  config.assets.precompile += %w[
-    serviceworker.js
-  ]
-end
-```
-
-### Tutorial
-
-Not sure how to start? This section is for you.
-
-Let's add a `ServiceWorker` to cache some of your JavaScript and CSS assets. We'll assume you already have a Rails application using the asset pipeline built on Sprockets.
-
-#### Setup
-
-Add `serviceworker-rails` to your `Gemfile` [as described above](#installation) and run `$ bundle install`.
-
-Create a JavaScript file called `app/assets/javascripts/serviceworker.js.erb`:
-
-```javascript
-// app/assets/javascripts/serviceworker.js.erb
-console.log('[Service Worker] Hello world!');
-
-self.addEventListener('install', function onInstall(event) {
-  event.waitUntil(
-    caches.open('cached-assets').then(function prefill(cache) {
-      return cache.addAll([
-        '<%= asset_path "application.js" %>',
-        '<%= asset_path "application.css" %>',
-        '<%= asset_path "admin.css" %>',
-        // you get the idea ...
-      ]);
-    })
-  );
-});
-```
-
-You'll need to register the service worker with a companion script in your main page JavaScript, like `application.js`. You can use the following:
-
-```javascript
-// app/assets/application.js
-// rest of your js ...
-
-if (navigator.serviceWorker) {
-  navigator.serviceWorker.register('/serviceworker.js', { scope: './' })
-    .then(function(reg) {
-      console.log('[Page] Service worker registered!');
-    });
-}
-```
-
-Add a snippet of Ruby in `config/application.rb` as show below. This can also go in a new initializer file like `config/initializers/serviceworker.rb`.
-
-```ruby
-# config/application.rb
-
-Rails.application.configure do
-  config.serviceworker.routes.draw do
-    match "/serviceworker.js"
-  end
-end
-```
-
-At this point, restart your Rails app and reload a page in your app in Chrome or Firefox. Using dev tools, you should be able to determine.
-
-1. The page requests a service worker at `/serviceworker.js`
-2. The Rails app responds to the request by compiling and rendering the file in `app/assets/javascripts/serviceworker.js.erb`.
-3. The console displays messages from the page and the service worker
-4. The application JavaScript and CSS assets are added to the browser's request/response [Cache](https://developer.mozilla.org/en-US/docs/Web/API/Cache).
-
-#### Using the cache
-
-So far so good? At this point, all we've done is pre-fetched assets and added them to the cache, but we're not doing anything with them yet.
-
-Now, we can use the service worker to intercept requests and either serve them from the cache if they exist there or fallback to the network response otherwise. In most cases, we can expect responses coming from the local cache to be much faster than those coming from the network.
-
-(...more coming soon, WIP)
 
 ## Development
 
