@@ -87,7 +87,13 @@ class ServiceWorker::GeneratorTest < Minitest::Test
   def test_appends_manifest_link
     application_layout = File.read("#{sample_app_path}/app/views/layouts/application.html.erb")
 
-    assert application_layout =~ %r{\<link rel="manifest" href="/manifest.json" \/\>},
+    assert application_layout =~ %r{<link rel="manifest" href="/manifest.json" />},
       "Expected manifest to be linked"
+    assert application_layout =~ /<meta name="apple-mobile-web-app-capable" content="yes">/,
+      "Expected apple meta tag"
+  end
+
+  def test_generates_offline_html
+    assert File.exist?("#{sample_app_path}/public/offline.html"), "Expected offline.html to be generated"
   end
 end
