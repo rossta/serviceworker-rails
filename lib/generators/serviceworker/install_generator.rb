@@ -7,8 +7,8 @@ module Serviceworker
       source_root File.join(File.dirname(__FILE__), "templates")
 
       def create_assets
-        template "manifest.json", javascripts_dir("manifest.json")
-        template "serviceworker.js", javascripts_dir("serviceworker.js")
+        template "manifest.json", javascripts_dir("manifest.json.erb")
+        template "serviceworker.js", javascripts_dir("serviceworker.js.erb")
         template "serviceworker-companion.js", javascripts_dir("serviceworker-companion.js")
       end
 

@@ -47,7 +47,7 @@ class ServiceWorker::GeneratorTest < Minitest::Test
   end
 
   def test_generates_serviceworker
-    serviceworker_js = File.read("#{sample_app_path}/app/assets/javascripts/serviceworker.js")
+    serviceworker_js = File.read("#{sample_app_path}/app/assets/javascripts/serviceworker.js.erb")
     companion_js = File.read("#{sample_app_path}/app/assets/javascripts/serviceworker-companion.js")
 
     assert serviceworker_js =~ /self.addEventListener\('install', onInstall\)/,
@@ -64,7 +64,7 @@ class ServiceWorker::GeneratorTest < Minitest::Test
   end
 
   def test_generates_manifest
-    manifest_json = File.read("#{sample_app_path}/app/assets/javascripts/manifest.json")
+    manifest_json = File.read("#{sample_app_path}/app/assets/javascripts/manifest.json.erb")
 
     assert manifest_json =~ /"name": "My Progressive Rails App"/,
       "Expected manifest to be generated"
