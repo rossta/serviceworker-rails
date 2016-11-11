@@ -7,44 +7,45 @@ module Serviceworker
       source_root File.join(File.dirname(__FILE__), "templates")
 
       def create_assets
-        template "serviceworker.js",
-          File.join(javascripts_base_dir, "serviceworker.js")
-        template "serviceworker-companion.js",
-          File.join(javascripts_base_dir, "serviceworker-companion.js")
-        template "manifest.json",
-          File.join(javascripts_base_dir, "manifest.json")
+        template "manifest.json", javascripts_dir("manifest.json.erb")
+        template "serviceworker.js", javascripts_dir("serviceworker.js.erb")
+        template "serviceworker-companion.js", javascripts_dir("serviceworker-companion.js")
       end
 
       def create_initializer
-        template "serviceworker.rb",
-          File.join(initializers_dir, "serviceworker.rb")
+        template "serviceworker.rb", initializers_dir("serviceworker.rb")
       end
 
       def update_application_js
         ext, directive = detect_js_format
-        append_to_file application_js_path(ext), "#{directive} require serviceworker-companion\n"
+        snippet = "#{directive} require serviceworker-companion\n"
+        append_to_file application_js_path(ext), snippet
       end
 
       def update_precompiled_assets
-        append_to_file File.join(initializers_dir, "assets.rb"),
-          "Rails.configuration.assets.precompile += %w[serviceworker.js]\n"
+        snippet = "Rails.configuration.assets.precompile += %w[serviceworker.js manifest.json]\n"
+        append_to_file initializers_dir("assets.rb"), snippet
       end
 
       def update_application_layout
-        insert_into_file detect_layout,
-          %(<link rel="manifest" href="/manifest.json" />),
-          before: "</head>\n"
+        snippet = %(<link rel="manifest" href="/manifest.json" />)
+        snippet << %(\n<meta name="apple-mobile-web-app-capable" content="yes">)
+        insert_into_file detect_layout, snippet, before: "</head>\n"
+      end
+
+      def add_offline_html
+        template "offline.html", public_dir("offline.html")
       end
 
       private
 
       def application_js_path(ext)
-        File.join(javascripts_base_dir, "application#{ext}")
+        javascripts_dir("application#{ext}")
       end
 
       def detect_js_format
         %w[.coffee .coffee.erb .js.coffee .js.coffee.erb .js .js.erb].each do |ext|
-          next unless File.exist?(File.join(javascripts_base_dir, "application#{ext}"))
+          next unless File.exist?(javascripts_dir("application#{ext}"))
           return [ext, "#="] if ext.include?(".coffee")
           return [ext, "//="]
         end
@@ -52,21 +53,25 @@ module Serviceworker
 
       def detect_layout
         layouts = %w[.html.erb .html.haml .html.slim].map do |ext|
-          File.join(layouts_base_dir, "application#{ext}")
+          layouts_dir("application#{ext}")
         end
         layouts.find { |layout| File.exist?(layout) }
       end
 
-      def javascripts_base_dir
-        File.join("app", "assets", "javascripts")
+      def javascripts_dir(*paths)
+        File.join("app", "assets", "javascripts", *paths)
       end
 
-      def initializers_dir
-        File.join("config", "initializers")
+      def initializers_dir(*paths)
+        File.join("config", "initializers", *paths)
       end
 
-      def layouts_base_dir
-        File.join("app", "views", "layouts")
+      def layouts_dir(*paths)
+        File.join("app", "views", "layouts", *paths)
+      end
+
+      def public_dir(*paths)
+        File.join("public", *paths)
       end
     end
   end

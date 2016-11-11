@@ -1,44 +1,10 @@
 require "rails_helper"
 require "fileutils"
 
-module GeneratorTestHelpers
-  def create_generator_sample_app
-    FileUtils.mkdir_p(tmp_path)
-    FileUtils.cd(tmp_path) do
-      system "rails new generator_sample --skip-active-record --skip-test-unit --skip-spring --skip-bundle --quiet"
-      File.open(File.join(sample_app_path, "Gemfile"), "a") do |f|
-        f.puts "gem 'serviceworker-rails', path: '#{File.join(File.dirname(__FILE__), "..", "..")}'"
-      end
-    end
-
-    FileUtils.cd(sample_app_path) do
-      system "bundle install --quiet"
-    end
-  end
-
-  def install_serviceworker_rails
-    FileUtils.cd(sample_app_path) do
-      system "rails g serviceworker:install --quiet -f 2>&1"
-    end
-  end
-
-  def remove_generator_sample_app
-    FileUtils.rm_rf(tmp_path)
-  end
-
-  def sample_app_path
-    File.join(tmp_path, "generator_sample")
-  end
-
-  def tmp_path
-    File.join(File.dirname(__FILE__), "..", "tmp")
-  end
-end
-
 class ServiceWorker::GeneratorTest < Minitest::Test
   include GeneratorTestHelpers
-  extend GeneratorTestHelpers
 
+  # Run once, i.e., before(:all)
   create_generator_sample_app
   install_serviceworker_rails
 
@@ -47,7 +13,7 @@ class ServiceWorker::GeneratorTest < Minitest::Test
   end
 
   def test_generates_serviceworker
-    serviceworker_js = File.read("#{sample_app_path}/app/assets/javascripts/serviceworker.js")
+    serviceworker_js = File.read("#{sample_app_path}/app/assets/javascripts/serviceworker.js.erb")
     companion_js = File.read("#{sample_app_path}/app/assets/javascripts/serviceworker-companion.js")
 
     assert serviceworker_js =~ /self.addEventListener\('install', onInstall\)/,
@@ -64,17 +30,22 @@ class ServiceWorker::GeneratorTest < Minitest::Test
   end
 
   def test_generates_manifest
-    manifest_json = File.read("#{sample_app_path}/app/assets/javascripts/manifest.json")
+    manifest_template = File.read("#{sample_app_path}/app/assets/javascripts/manifest.json.erb")
 
-    assert manifest_json =~ /"name": "My Progressive Rails App"/,
+    assert manifest_template =~ /"name": "My Progressive Rails App"/,
       "Expected manifest to be generated"
+
+    manifest_json = JSON.parse(evaluate_erb_asset_template(manifest_template))
+
+    assert_equal manifest_json["name"], "My Progressive Rails App"
+    assert_equal manifest_json["icons"].length, ::Rails.configuration.serviceworker.icon_sizes.length
   end
 
   def test_appends_precompilation
     precompilation_rb = File.read("#{sample_app_path}/config/initializers/assets.rb")
 
-    assert precompilation_rb =~ /Rails.configuration.assets.precompile \+\= \%w\[serviceworker.js\]/,
-      "Expected asset to be precompiled"
+    assert precompilation_rb =~ /Rails.configuration.assets.precompile \+\= \%w\[serviceworker.js manifest.json\]/,
+      "Expected assets to be precompiled"
   end
 
   def test_appends_companion_require
@@ -87,7 +58,13 @@ class ServiceWorker::GeneratorTest < Minitest::Test
   def test_appends_manifest_link
     application_layout = File.read("#{sample_app_path}/app/views/layouts/application.html.erb")
 
-    assert application_layout =~ %r{\<link rel="manifest" href="/manifest.json" \/\>},
+    assert application_layout =~ %r{<link rel="manifest" href="/manifest.json" />},
       "Expected manifest to be linked"
+    assert application_layout =~ /<meta name="apple-mobile-web-app-capable" content="yes">/,
+      "Expected apple meta tag"
+  end
+
+  def test_generates_offline_html
+    assert File.exist?("#{sample_app_path}/public/offline.html"), "Expected offline.html to be generated"
   end
 end
