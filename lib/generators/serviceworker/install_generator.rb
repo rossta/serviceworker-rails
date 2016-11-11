@@ -23,7 +23,7 @@ module Serviceworker
       end
 
       def update_precompiled_assets
-        snippet = "Rails.configuration.assets.precompile += %w[serviceworker.js]\n"
+        snippet = "Rails.configuration.assets.precompile += %w[serviceworker.js manifest.json]\n"
         append_to_file initializers_dir("assets.rb"), snippet
       end
 

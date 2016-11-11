@@ -44,8 +44,8 @@ class ServiceWorker::GeneratorTest < Minitest::Test
   def test_appends_precompilation
     precompilation_rb = File.read("#{sample_app_path}/config/initializers/assets.rb")
 
-    assert precompilation_rb =~ /Rails.configuration.assets.precompile \+\= \%w\[serviceworker.js\]/,
-      "Expected asset to be precompiled"
+    assert precompilation_rb =~ /Rails.configuration.assets.precompile \+\= \%w\[serviceworker.js manifest.json\]/,
+      "Expected assets to be precompiled"
   end
 
   def test_appends_companion_require
