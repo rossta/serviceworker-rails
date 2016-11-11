@@ -30,10 +30,15 @@ class ServiceWorker::GeneratorTest < Minitest::Test
   end
 
   def test_generates_manifest
-    manifest_json = File.read("#{sample_app_path}/app/assets/javascripts/manifest.json.erb")
+    manifest_template = File.read("#{sample_app_path}/app/assets/javascripts/manifest.json.erb")
 
-    assert manifest_json =~ /"name": "My Progressive Rails App"/,
+    assert manifest_template =~ /"name": "My Progressive Rails App"/,
       "Expected manifest to be generated"
+
+    manifest_json = JSON.parse(evaluate_erb_asset_template(manifest_template))
+
+    assert_equal manifest_json["name"], "My Progressive Rails App"
+    assert_equal manifest_json["icons"].length, ::Rails.configuration.serviceworker.icon_sizes.length
   end
 
   def test_appends_precompilation

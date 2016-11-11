@@ -34,4 +34,18 @@ module GeneratorTestHelpers
   def tmp_path
     File.join(File.dirname(__FILE__), "..", "tmp")
   end
+
+  def evaluate_erb_asset_template(template)
+    engine = ::ERB.new(template)
+    asset_binding = asset_context_class.new.instance_eval("binding")
+    engine.result(asset_binding)
+  end
+
+  def asset_context_class
+    Class.new do
+      def image_path(name)
+        "/assets/#{name}"
+      end
+    end
+  end
 end
