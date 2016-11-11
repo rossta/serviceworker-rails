@@ -5,12 +5,12 @@ module GeneratorTestHelpers
   end
 
   module TestMethods
-    def sample_app_path
-      File.join(tmp_path, "generator_sample")
+    def sample_app_path(*paths)
+      tmp_path("generator_sample", *paths)
     end
 
-    def tmp_path
-      File.join(File.dirname(__FILE__), "..", "tmp")
+    def tmp_path(*paths)
+      File.join(File.dirname(__FILE__), "..", "tmp", *paths)
     end
 
     def evaluate_erb_asset_template(template)
