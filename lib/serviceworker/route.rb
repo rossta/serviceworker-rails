@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ServiceWorker
   class Route
     attr_reader :path_pattern, :asset_pattern, :options

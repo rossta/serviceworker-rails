@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ServiceWorker
   class Handler
     def initialize(root = Dir.getwd)
