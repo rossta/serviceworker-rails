@@ -44,7 +44,7 @@ module Serviceworker
       end
 
       def detect_js_format
-        %w[.coffee .coffee.erb .js.coffee .js.coffee.erb .js .js.erb].each do |ext|
+        %w[.js .js.erb .coffee .coffee.erb .js.coffee .js.coffee.erb].each do |ext|
           next unless File.exist?(javascripts_dir("application#{ext}"))
           return [ext, "#="] if ext.include?(".coffee")
           return [ext, "//="]
@@ -59,19 +59,23 @@ module Serviceworker
       end
 
       def javascripts_dir(*paths)
-        File.join("app", "assets", "javascripts", *paths)
+        join("app", "assets", "javascripts", *paths)
       end
 
       def initializers_dir(*paths)
-        File.join("config", "initializers", *paths)
+        join("config", "initializers", *paths)
       end
 
       def layouts_dir(*paths)
-        File.join("app", "views", "layouts", *paths)
+        join("app", "views", "layouts", *paths)
       end
 
       def public_dir(*paths)
-        File.join("public", *paths)
+        join("public", *paths)
+      end
+
+      def join(*paths)
+        File.expand_path(File.join(*paths), destination_root)
       end
     end
   end
