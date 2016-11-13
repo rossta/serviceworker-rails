@@ -130,7 +130,6 @@ You may also want to create a `manifest.json` file to make your web app installa
 ```
 // manifest.json
 {
-  "name": "My Rails App"
   "name": "My Progressive Rails App",
   "short_name": "Progressive",
   "start_url": "/"
