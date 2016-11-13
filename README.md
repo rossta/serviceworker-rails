@@ -61,6 +61,29 @@ your Rails project.
 $ rails g serviceworker:install
 ```
 
+The generator will create the following files:
+
+* `config/initializers/serviceworker.rb` - for configuring your Rails app
+* `app/assets/javascripts/serviceworker.js.erb` - a blank Service Worker
+  script with some example strategies
+* `app/assets/javascripts/serviceworker-companion.js` - a snippet of JavaScript
+  necessary to register your Service Worker in the browser
+* `app/assets/javascripts/manifest.json.erb` - a starter web app manifest
+  pointing to some default app icons provided by the gem
+* `public/offline.html` - a starter offline page
+
+It will also make the following modifications to existing files:
+
+* Adds a sprockets directive to `application.js` to require
+  `serviceworker-companion.js`
+* Adds `serviceworker.js` and `manifest.json` to the list of compiled assets in
+  `config/initializers/assets.rb`
+* Injects tags into the `head` of `app/views/layouts/application.html.erb` for
+  linking to the web app manifest
+
+To learn more about each of the changes or to perform the set up yourself, check
+out the manual setup section below.
+
 ### Manual setup
 
 Let's add a `ServiceWorker` to cache some of your JavaScript and CSS assets. We'll assume you already have a Rails application using the asset pipeline built on Sprockets.
@@ -75,18 +98,37 @@ console.log('[Service Worker] Hello world!');
 
 function onInstall(event) {
   event.waitUntil(
-    caches.open('cached-assets').then(function prefill(cache) {
+    caches.open('cached-assets-v1').then(function prefill(cache) {
       return cache.addAll([
         '<%= asset_path "application.js" %>',
         '<%= asset_path "application.css" %>',
-        '<%= asset_path "admin.css" %>',
+        '/offline.html',
         // you get the idea ...
       ]);
     })
   );
 }
 
+function onActivate(event) {
+  console.log('[Serviceworker]', "Activating!", event);
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.filter(function(cacheName) {
+          // Return true if you want to remove this cache,
+          // but remember that caches are shared across
+          // the whole origin
+           return key.indexOf('v1') !== 0;
+        }).map(function(cacheName) {
+          return caches.delete(cacheName);
+        })
+      );
+    })
+  );
+}
+
 self.addEventListener('install', onInstall)
+self.addEventListener('activate', onActivate)
 ```
 
 For use in production, instruct Sprockets to precompile service worker scripts separately from `application.js`, as in the following example:
@@ -173,7 +215,30 @@ So far so good? At this point, all we've done is pre-fetched assets and added th
 
 Now, we can use the service worker to intercept requests and either serve them from the cache if they exist there or fallback to the network response otherwise. In most cases, we can expect responses coming from the local cache to be much faster than those coming from the network.
 
-(...more coming soon, WIP)
+```javascript
+// app/assets/javascripts/serviceworker.js.erb
+
+function onFetch(event) {
+  // Fetch from network, fallback to cached content, then offline.html for same-origin GET requests
+  var request = event.request;
+
+  if (!request.url.match(/^https?:\/\/example.com/) ) { return; }
+  if (request.method !== 'GET') { return; }
+
+  event.respondWith(
+    fetch(request).                                       // first, the network
+      .catch(function fallback() {
+         caches.match(request).then(function(response) {  // then, the cache
+           response || caches.match("/offline.html");     // then, /offline cache
+         })
+       })
+  );
+
+  // See https://jakearchibald.com/2014/offline-cookbook/#on-network-response for more examples
+}
+
+self.addEventListener('install', onInstall);
+```
 
 ## Configuration
 
