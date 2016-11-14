@@ -133,18 +133,6 @@ self.addEventListener('activate', onActivate)
 
 For use in production, instruct Sprockets to precompile service worker scripts separately from `application.js`, as in the following example:
 
-#### Precompile the asset
-
-```ruby
-# config/initializers/assets.rb
-
-Rails.application.configure do
-  config.assets.precompile += %w[
-    serviceworker.js
-  ]
-end
-```
-
 #### Register the service worker
 
 You'll need to register the service worker with a companion script in your main page JavaScript, like `application.js`. You can use the following:
@@ -170,7 +158,7 @@ if (navigator.serviceWorker) {
 You may also want to create a `manifest.json` file to make your web app installable.
 
 ```
-// manifest.json
+// app/assets/javascripts/manifest.json
 {
   "name": "My Progressive Rails App",
   "short_name": "Progressive",
@@ -197,6 +185,16 @@ Rails.application.configure do
     match "/serviceworker.js"
     match "/manifest.json"
   end
+end
+```
+
+#### Precompile the assets
+
+```ruby
+# config/initializers/assets.rb
+
+Rails.application.configure do
+  config.assets.precompile += %w[serviceworker.js manifest.json]
 end
 ```
 
