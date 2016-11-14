@@ -5,7 +5,7 @@ module GeneratorTestHelpers
 
   def evaluate_erb_asset_template(template)
     engine = ::ERB.new(template)
-    asset_binding = asset_context_class.new.instance_eval("binding")
+    asset_binding = asset_context_class.new.context_binding
     engine.result(asset_binding)
   end
 
@@ -13,6 +13,10 @@ module GeneratorTestHelpers
     Class.new do
       def image_path(name)
         "/assets/#{name}"
+      end
+
+      def context_binding
+        binding
       end
     end
   end
