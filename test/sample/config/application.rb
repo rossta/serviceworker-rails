@@ -30,5 +30,7 @@ module Sample
     # config.active_record.raise_in_transactional_callbacks = true
 
     config.serviceworker.headers["X-Custom-Header"] = "foobar"
+
+    config.assets.enabled = true unless config.assets.enabled?
   end
 end

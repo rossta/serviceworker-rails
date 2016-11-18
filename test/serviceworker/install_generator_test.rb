@@ -7,6 +7,7 @@ class ServiceWorker::InstallGeneratorTest < ::Rails::Generators::TestCase
   tests Serviceworker::Generators::InstallGenerator
   destination File.expand_path("../tmp", File.dirname(__FILE__))
 
+  remove_generator_sample_app
   create_generator_sample_app
 
   Minitest.after_run do
