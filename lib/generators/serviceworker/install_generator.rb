@@ -1,4 +1,5 @@
 require "rails/generators"
+require "fileutils"
 
 module Serviceworker
   module Generators
@@ -24,7 +25,9 @@ module Serviceworker
 
       def update_precompiled_assets
         snippet = "Rails.configuration.assets.precompile += %w[serviceworker.js manifest.json]\n"
-        append_to_file initializers_dir("assets.rb"), snippet
+        file_path = initializers_dir("assets.rb")
+        FileUtils.touch file_path
+        append_to_file file_path, snippet
       end
 
       def update_application_layout

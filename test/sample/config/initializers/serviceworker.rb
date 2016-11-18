@@ -1,4 +1,4 @@
-Rails.application.configure do
+Sample::Application.configure do
   config.serviceworker.routes.draw_default
 
   config.serviceworker.routes.draw do

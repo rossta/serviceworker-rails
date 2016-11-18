@@ -14,7 +14,11 @@ module ServiceWorker
     initializer "serviceworker-rails.configure_rails_initialization", after: :load_config_initializers do
       config.serviceworker.logger ||= ::Rails.logger
 
-      config.assets.precompile += %w[serviceworker-rails/*.png]
+      if config.respond_to?(:assets)
+        config.assets.precompile += %w[serviceworker-rails/*.png]
+      elsif app.config.respond_to?(:assets)
+        app.config.assets.precompile += %w[serviceworker-rails/*.png]
+      end
 
       app.middleware.use ServiceWorker::Middleware, config.serviceworker
     end
