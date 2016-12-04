@@ -5,8 +5,8 @@ gemspec
 
 group :development, :test do
   unless ENV["TRAVIS"]
-    gem "guard"
-    gem "guard-minitest"
+    gem "guard", require: false
+    gem "guard-minitest", require: false
     gem "pry"
     gem "pry-byebug", platforms: [:mri]
   end
