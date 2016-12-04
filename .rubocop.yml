@@ -85,3 +85,6 @@ Style/SpecialGlobalVars:
 
 Style/TrivialAccessors:
   Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
