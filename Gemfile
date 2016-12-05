@@ -4,12 +4,10 @@ source "https://rubygems.org"
 gemspec
 
 group :development, :test do
-  gem "rubocop", "0.39.0"
-
   unless ENV["TRAVIS"]
+    gem "guard", require: false
+    gem "guard-minitest", require: false
     gem "pry"
     gem "pry-byebug", platforms: [:mri]
-    gem "guard"
-    gem "guard-minitest"
   end
 end

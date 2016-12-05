@@ -75,6 +75,7 @@ module ServiceWorker
       end
 
       def compiled_source(pattern)
+        @wildcard_name = nil
         pattern_match = pattern.match(WILDCARD_PATTERN)
         if pattern_match
           @wildcard_name = if pattern_match[1].to_s.strip.empty?
