@@ -159,7 +159,7 @@ if (navigator.serviceWorker) {
 
 You may also want to create a `manifest.json` file to make your web app installable.
 
-```
+```javascript
 // app/assets/javascripts/manifest.json
 {
   "name": "My Progressive Rails App",
