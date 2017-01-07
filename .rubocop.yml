@@ -1,6 +1,7 @@
 AllCops:
   Exclude:
     - "test/tmp/**/*"
+    - "tmp/**/*"
 
 Metrics/LineLength:
   Max: 120
