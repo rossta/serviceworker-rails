@@ -1,12 +1,13 @@
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-
 ENV["RAILS_ENV"] = ENV["RACK_ENV"] = "test"
 
 require "simplecov"
-
+require "coveralls"
+SimpleCov.maximum_coverage_drop 5
 SimpleCov.start do
-  add_filter "test/sample"
+  add_filter "test"
 end
+
+$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 
 require File.expand_path("../../test/sample/config/environment.rb", __FILE__)
 

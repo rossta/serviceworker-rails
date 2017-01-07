@@ -4,6 +4,8 @@ source "https://rubygems.org"
 gemspec
 
 group :development, :test do
+  gem "coveralls"
+
   unless ENV["TRAVIS"]
     gem "guard", require: false
     gem "guard-minitest", require: false
