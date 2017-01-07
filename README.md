@@ -1,9 +1,7 @@
 # ServiceWorker::Rails
 
 [![Build Status](https://travis-ci.org/rossta/serviceworker-rails.svg?branch=master)](https://travis-ci.org/rossta/serviceworker-rails)
-
 [![Code Climate](https://codeclimate.com/github/rossta/serviceworker-rails/badges/gpa.svg)](https://codeclimate.com/github/rossta/serviceworker-rails)
-
 [![Test Coverage](https://codeclimate.com/github/rossta/serviceworker-rails/badges/coverage.svg)](https://codeclimate.com/github/rossta/serviceworker-rails/coverage)
 
 Turn your Rails app into a Progressive Web App. Use [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) with the Rails asset pipeline.
