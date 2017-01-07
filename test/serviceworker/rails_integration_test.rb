@@ -1,4 +1,4 @@
-require "rails_helper"
+require "test_helper"
 
 class ServiceWorker::RailsIntegrationTest < Minitest::Test
   include Rack::Test::Methods
