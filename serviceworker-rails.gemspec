@@ -29,5 +29,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop", "0.46.0"
   spec.add_development_dependency "rails"
   spec.add_development_dependency "appraisal", "~> 2.1.0"
-  spec.add_development_dependency "simplecov"
 end
