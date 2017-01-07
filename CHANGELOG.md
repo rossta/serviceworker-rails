@@ -1,3 +1,19 @@
+### 0.5.2 - 2017-01-07
+
+* enhancements
+  * Enable generated serviceworker.js with improved fetch logic
+* bug fixes
+  * Omit application.js from generated serviceworker.js to prevent circular
+    sprockets requires
+
+### 0.5.1 - 2016-11-17
+
+* enhancements
+  * Add support for Rails 3
+* bug fixes
+  * Fix syntax error in generated serviceworker.js
+  * Remove duplicate line in generated manifest.json (@brandonhilkert)
+
 ### 0.5.0 - 2016-11-10
 
 * enhancements
