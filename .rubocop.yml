@@ -2,6 +2,7 @@ AllCops:
   Exclude:
     - "test/tmp/**/*"
     - "tmp/**/*"
+    - "coverage/**/*"
 
 Metrics/LineLength:
   Max: 120
