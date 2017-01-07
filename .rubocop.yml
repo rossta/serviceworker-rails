@@ -2,6 +2,8 @@ AllCops:
   Exclude:
     - "test/tmp/**/*"
     - "tmp/**/*"
+    - "coverage/**/*"
+    - "gemfiles/**/*"
 
 Metrics/LineLength:
   Max: 120
