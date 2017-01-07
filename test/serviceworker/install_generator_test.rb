@@ -1,5 +1,5 @@
-require "rails_helper"
-require_relative File.expand_path("../../../lib/generators/serviceworker/install_generator", __FILE__)
+require "test_helper"
+require "generators/serviceworker/install_generator"
 
 class ServiceWorker::InstallGeneratorTest < ::Rails::Generators::TestCase
   include GeneratorTestHelpers
