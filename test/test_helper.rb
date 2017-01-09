@@ -5,7 +5,7 @@ ENV["RAILS_ENV"] = ENV["RACK_ENV"] = "test"
 require "simplecov"
 require "coveralls"
 SimpleCov.maximum_coverage_drop 5
-SimpleCov.start do
+Coveralls.wear! do
   add_filter "test"
 end
 
