@@ -1,3 +1,8 @@
+### 0.5.3 - 2017-01-11
+
+* bug fixes
+  * Fix javascript variable name error in serviceworker template (@amelzer)
+
 ### 0.5.2 - 2017-01-07
 
 * enhancements
