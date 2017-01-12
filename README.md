@@ -122,7 +122,7 @@ function onActivate(event) {
           // Return true if you want to remove this cache,
           // but remember that caches are shared across
           // the whole origin
-           return key.indexOf('v1') !== 0;
+           return cacheName.indexOf('v1') !== 0;
         }).map(function(cacheName) {
           return caches.delete(cacheName);
         })
