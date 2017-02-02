@@ -1,3 +1,8 @@
+### 0.5.4 - 2017-02-02
+
+* bug fixes
+  * Fix cache name for proper cache deletion in activation callback of serviceworker template
+
 ### 0.5.3 - 2017-01-11
 
 * bug fixes
