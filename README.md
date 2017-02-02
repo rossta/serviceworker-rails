@@ -100,9 +100,11 @@ Create a JavaScript file called `app/assets/javascripts/serviceworker.js.erb`:
 // app/assets/javascripts/serviceworker.js.erb
 console.log('[Service Worker] Hello world!');
 
+var CACHE_NAME = 'v1-cached-assets'
+
 function onInstall(event) {
   event.waitUntil(
-    caches.open('cached-assets-v1').then(function prefill(cache) {
+    caches.open(CACHE_NAME).then(function prefill(cache) {
       return cache.addAll([
         '<%= asset_path "application.js" %>',
         '<%= asset_path "application.css" %>',
