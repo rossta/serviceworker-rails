@@ -60,7 +60,7 @@ module Serviceworker
       end
 
       def detect_layout
-        layouts = %w[.html.erb .html.haml .html.slim].map do |ext|
+        layouts = %w[.html.erb .html.haml .html.slim .erb .haml .slim].map do |ext|
           layouts_dir("application#{ext}")
         end
         layouts.find { |layout| File.exist?(layout) }
