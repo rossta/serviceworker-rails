@@ -31,9 +31,10 @@ module Serviceworker
       end
 
       def update_application_layout
+        layout = detect_layout or return
         snippet = %(<link rel="manifest" href="/manifest.json" />)
         snippet << %(\n<meta name="apple-mobile-web-app-capable" content="yes">)
-        insert_into_file detect_layout, snippet, before: "</head>\n"
+        insert_into_file layout, snippet, before: "</head>\n"
       end
 
       def add_offline_html
