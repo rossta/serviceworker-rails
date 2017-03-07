@@ -4,6 +4,8 @@ require "generators/serviceworker/install_generator"
 class ServiceWorker::InstallGeneratorTest < ::Rails::Generators::TestCase
   include GeneratorTestHelpers
 
+  class_attribute :install_destination
+
   tests Serviceworker::Generators::InstallGenerator
   destination File.expand_path("../tmp", File.dirname(__FILE__))
 
@@ -65,5 +67,12 @@ class ServiceWorker::InstallGeneratorTest < ::Rails::Generators::TestCase
 
   test "generates offline html" do
     assert_file "public/offline.html"
+  end
+
+  test "missing application layout does not error" do
+    dir = File.expand_path("../tmp", File.dirname(__FILE__))
+    system "mv #{dir}/app/views/layouts/application.html.erb #{dir}/app/views/layouts/application.tmp"
+    run_generator
+    system "mv #{dir}/app/views/layouts/application.tmp #{dir}/app/views/layouts/application.html.erb"
   end
 end
