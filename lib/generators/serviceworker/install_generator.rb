@@ -31,9 +31,14 @@ module Serviceworker
       end
 
       def update_application_layout
+        layout = detect_layout
         snippet = %(<link rel="manifest" href="/manifest.json" />)
         snippet << %(\n<meta name="apple-mobile-web-app-capable" content="yes">)
-        insert_into_file detect_layout, snippet, before: "</head>\n"
+        unless layout
+          warn "Could not locate application layout. To insert manifest tags manually, use:\n\n#{snippet}\n"
+          return
+        end
+        insert_into_file layout, snippet, before: "</head>\n"
       end
 
       def add_offline_html
@@ -55,7 +60,7 @@ module Serviceworker
       end
 
       def detect_layout
-        layouts = %w[.html.erb .html.haml .html.slim].map do |ext|
+        layouts = %w[.html.erb .html.haml .html.slim .erb .haml .slim].map do |ext|
           layouts_dir("application#{ext}")
         end
         layouts.find { |layout| File.exist?(layout) }
