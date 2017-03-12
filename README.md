@@ -241,7 +241,7 @@ function onFetch(event) {
   // See https://jakearchibald.com/2014/offline-cookbook/#on-network-response for more examples
 }
 
-self.addEventListener('install', onInstall);
+self.addEventListener('fetch', onFetch);
 ```
 
 ## Configuration
