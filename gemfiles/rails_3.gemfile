@@ -6,11 +6,10 @@ gem "rails", "~> 3.2"
 gem "test-unit", "~> 3.0"
 
 group :development, :test do
-  gem "rubocop", "0.39.0"
+  gem "guard", :require => false
+  gem "guard-minitest", :require => false
   gem "pry"
   gem "pry-byebug", :platforms => [:mri]
-  gem "guard"
-  gem "guard-minitest"
 end
 
 gemspec :path => "../"
