@@ -29,7 +29,15 @@ module ServiceWorker
       end
 
       def asset_path(path)
-        ::ActionController::Base.helpers.asset_path(path)
+        if controller_helpers.respond_to?(:compute_asset_path)
+          controller_helpers.compute_asset_path(path)
+        else
+          controller_helpers.asset_path(path, host: proc {})
+        end
+      end
+
+      def controller_helpers
+        ::ActionController::Base.helpers
       end
     end
   end
