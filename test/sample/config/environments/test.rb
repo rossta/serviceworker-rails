@@ -58,4 +58,14 @@ Sample::Application.configure do
   # Checks for improperly declared sprockets dependencies.
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
+
+  class TestAssetHost
+    cattr_accessor :host
+
+    def self.proc_method
+      proc { TestAssetHost.host }
+    end
+  end
+
+  config.action_controller.asset_host = TestAssetHost.proc_method
 end
