@@ -29,7 +29,25 @@ module ServiceWorker
       end
 
       def asset_path(path)
-        ::ActionController::Base.helpers.asset_path(path)
+        if controller_helpers.respond_to?(:compute_asset_path)
+          controller_helpers.compute_asset_path(path)
+        else
+          logical_asset_path(path)
+        end
+      end
+
+      def controller_helpers
+        ::ActionController::Base.helpers
+      end
+
+      def logical_asset_path(path)
+        asset_path = controller_helpers.asset_path(path)
+        uri = URI.parse(asset_path)
+        uri.host = nil
+        uri.scheme = nil
+        uri.to_s
+      rescue URI::InvalidURIError
+        asset_path
       end
     end
   end

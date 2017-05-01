@@ -35,7 +35,7 @@ module Serviceworker
         snippet = %(<link rel="manifest" href="/manifest.json" />)
         snippet << %(\n<meta name="apple-mobile-web-app-capable" content="yes">)
         unless layout
-          warn "Could not locate application layout. To insert manifest tags manually, use:\n\n#{snippet}\n"
+          conditional_warn "Could not locate application layout. To insert manifest tags manually, use:\n\n#{snippet}\n"
           return
         end
         insert_into_file layout, snippet, before: "</head>\n"
@@ -84,6 +84,14 @@ module Serviceworker
 
       def join(*paths)
         File.expand_path(File.join(*paths), destination_root)
+      end
+
+      def conditional_warn(warning)
+        silenced? or warn warning
+      end
+
+      def silenced?
+        ENV["RAILS_ENV"] == "test"
       end
     end
   end
