@@ -3,12 +3,8 @@
 ENV["RAILS_ENV"] = ENV["RACK_ENV"] = "test"
 
 require "simplecov"
-require "coveralls"
 SimpleCov.minimum_coverage 75
 SimpleCov.maximum_coverage_drop 25
-Coveralls.wear! do
-  add_filter "test"
-end
 
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 
