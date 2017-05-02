@@ -1,3 +1,9 @@
+### 0.5.5 - 2017-05-01
+
+* bug fixes
+  * Ensure middleware can handle assets when a separate asset host, e.g. a CDN,
+    is configured
+
 ### 0.5.4 - 2017-02-02
 
 * bug fixes
