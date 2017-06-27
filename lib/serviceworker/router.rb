@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ServiceWorker
   class Router
     PATH_INFO = "PATH_INFO".freeze

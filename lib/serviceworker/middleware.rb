@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ServiceWorker
   class Middleware
     REQUEST_METHOD = "REQUEST_METHOD".freeze

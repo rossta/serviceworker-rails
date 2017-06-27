@@ -1,4 +1,5 @@
 # coding: utf-8
+
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "serviceworker/rails/version"
@@ -26,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 11.0"
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "rack-test"
-  spec.add_development_dependency "rubocop", "0.46.0"
+  spec.add_development_dependency "rubocop", "~> 0.49.0"
   spec.add_development_dependency "rails"
   spec.add_development_dependency "appraisal", "~> 2.1.0"
   spec.add_development_dependency "simplecov"
