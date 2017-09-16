@@ -44,7 +44,7 @@ module ServiceWorker
     def respond_to_match(route_match, env)
       env = env.merge("serviceworker.asset_name" => route_match.asset_name)
 
-      status, headers, body = @handler.call(env)
+      status, headers, body = route_match_handler(route_match).call(env)
 
       [status, headers.merge(@headers).merge(route_match.headers), body]
     end
@@ -55,6 +55,19 @@ module ServiceWorker
 
     def logger
       @logger ||= @opts.fetch(:logger, Logger.new(STDOUT))
+    end
+
+    def route_match_handler(route_match)
+      if route_match.options[:pack] && defined?(Webpacker)
+        webpacker_handler
+      else
+        @handler
+      end
+    end
+
+    def webpacker_handler
+      require "serviceworker/rails/webpacker_handler"
+      ServiceWorker::Rails::WebpackerHandler.new
     end
 
     def default_handler

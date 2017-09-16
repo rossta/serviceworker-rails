@@ -97,4 +97,16 @@ class ServiceWorker::RailsIntegrationTest < Minitest::Test
       assert last_response.ok?
     end
   end
+
+  def test_webpacker_serviceworker
+    if defined?(Webpacker)
+      get "/webpack-serviceworker.js"
+      assert last_response.ok?
+      assert_match(/console.log\(.*'Hello from Webpack ServiceWorker!'.*\);/, last_response.body)
+    else
+      assert_raises ActionController::RoutingError do
+        get "/webpack-serviceworker.js"
+      end
+    end
+  end
 end

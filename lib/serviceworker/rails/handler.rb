@@ -15,7 +15,7 @@ module ServiceWorker
         end
       end
 
-    private
+      private
 
       def sprockets_server
         ::Rails.application.assets
