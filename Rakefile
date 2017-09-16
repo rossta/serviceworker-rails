@@ -16,3 +16,19 @@ Rake::TestTask.new(:test) do |t|
 end
 
 task default: %i[test rubocop]
+
+task :compile do
+  if defined?(Webpacker)
+    Dir.chdir('test/sample') do
+      sh 'RAILS_ENV=test ./bin/rake webpacker:compile'
+    end
+  end
+end
+
+Rake::Task[:test].enhance [:compile] do
+  if defined?(Webpacker)
+    Dir.chdir('test/sample') do
+      sh 'RAILS_ENV=test ./bin/rake webpacker:clobber'
+    end
+  end
+end
