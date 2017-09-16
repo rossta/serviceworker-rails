@@ -4,6 +4,9 @@
   <title>Sample</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <% if defined?(Webpacker) %>
+    <%= javascript_pack_tag 'application' %>
+  <% end %>
   <%= csrf_meta_tags %>
 </head>
 <body>

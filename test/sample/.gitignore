@@ -11,3 +11,6 @@
 /log/*
 !/log/.keep
 /tmp
+/public/packs
+/public/packs-test
+/node_modules
