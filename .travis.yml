@@ -1,9 +1,15 @@
 language: ruby
-cache: bundler
+cache:
+  bundler: true
+  yarn: true
+  directories:
+    - node_modules
 rvm:
   - 2.2.7
   - 2.3.4
-before_install: gem install bundler -v 1.15.3
+before_install:
+  - gem install bundler -v 1.15.3
+  - cd test/sample && yarn install
 gemfile:
   - gemfiles/rails_3.2.gemfile
   - gemfiles/rails_4.2.gemfile
