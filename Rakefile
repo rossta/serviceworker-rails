@@ -19,16 +19,17 @@ task default: %i[test rubocop]
 
 task :compile do
   if defined?(Webpacker)
-    Dir.chdir('test/sample') do
-      sh 'RAILS_ENV=test ./bin/rake webpacker:compile'
+    Dir.chdir("test/sample") do
+      sh "NODE_ENV=test yarn install"
+      sh "RAILS_ENV=test ./bin/rake webpacker:compile"
     end
   end
 end
 
 Rake::Task[:test].enhance [:compile] do
   if defined?(Webpacker)
-    Dir.chdir('test/sample') do
-      sh 'RAILS_ENV=test ./bin/rake webpacker:clobber'
+    Dir.chdir("test/sample") do
+      sh "RAILS_ENV=test ./bin/rake webpacker:clobber"
     end
   end
 end

@@ -18,10 +18,10 @@ module ServiceWorker
 
       @path_pattern = path_pattern
       @asset_pattern = if options[:pack] && defined?(Webpacker)
-        asset_pattern || options.fetch(:pack, path_pattern)
-      else
-        asset_pattern || options.fetch(:asset, path_pattern)
-      end
+                         asset_pattern || options.fetch(:pack, path_pattern)
+                       else
+                         asset_pattern || options.fetch(:asset, path_pattern)
+                       end
       @options = options
     end
 

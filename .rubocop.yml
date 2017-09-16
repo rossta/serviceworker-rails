@@ -1,9 +1,11 @@
 AllCops:
   Exclude:
     - "test/tmp/**/*"
+    - "test/log/**/*"
     - "tmp/**/*"
     - "coverage/**/*"
     - "gemfiles/**/*"
+    - "**/node_modules/**/*"
 
 Metrics/LineLength:
   Max: 120
