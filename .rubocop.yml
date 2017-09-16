@@ -97,3 +97,6 @@ Style/ClassAndModuleChildren:
 
 Style/FormatStringToken:
   Enabled: false
+
+Style/TrailingUnderscoreVariable:
+  Enabled: false
