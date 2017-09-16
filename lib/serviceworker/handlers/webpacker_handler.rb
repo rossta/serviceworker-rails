@@ -4,7 +4,7 @@ require "rack/file"
 require "webpacker"
 
 module ServiceWorker
-  module Rails
+  module Handlers
     class WebpackerHandler
       def call(env)
         path_info = env.fetch("serviceworker.asset_name")

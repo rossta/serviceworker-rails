@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "serviceworker/handlers/rack_handler"
+
 module ServiceWorker
   class Middleware
     REQUEST_METHOD = "REQUEST_METHOD".freeze
@@ -58,7 +60,7 @@ module ServiceWorker
     end
 
     def route_match_handler(route_match)
-      if route_match.options[:pack] && defined?(Webpacker)
+      if route_match.options[:pack] && defined?(::Webpacker)
         webpacker_handler
       else
         @handler
@@ -66,13 +68,16 @@ module ServiceWorker
     end
 
     def webpacker_handler
-      require "serviceworker/rails/webpacker_handler"
-      ServiceWorker::Rails::WebpackerHandler.new
+      require "serviceworker/handlers/webpacker_handler"
+      ServiceWorker::Handlers::WebpackerHandler.new
     end
 
     def default_handler
-      require "serviceworker/handler"
-      ServiceWorker::Handler.new
+      if defined?(::Rails) && ::Rails.configuration.assets
+        ServiceWorker::Handlers::SprocketsHandler.new
+      else
+        ServiceWorker::Handlers::RackHandler.new
+      end
     end
   end
 end

@@ -3,8 +3,8 @@
 require "rack/file"
 
 module ServiceWorker
-  module Rails
-    class Handler
+  module Handlers
+    class SprocketsHandler
       def call(env)
         path_info = env.fetch("serviceworker.asset_name")
 
