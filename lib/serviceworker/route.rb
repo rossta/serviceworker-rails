@@ -10,6 +10,14 @@ module ServiceWorker
       end
     end
 
+    def self.webpacker?(options)
+      options.key?(:pack) && Handlers.webpacker?
+    end
+
+    def self.sprockets?(options)
+      options.key?(:asset)
+    end
+
     def initialize(path_pattern, asset_pattern = nil, options = {})
       if asset_pattern.is_a?(Hash)
         options = asset_pattern
@@ -17,7 +25,7 @@ module ServiceWorker
       end
 
       @path_pattern = path_pattern
-      @asset_pattern = if options[:pack] && defined?(::Webpacker)
+      @asset_pattern = if self.class.webpacker?(options)
                          asset_pattern || options.fetch(:pack, path_pattern)
                        else
                          asset_pattern || options.fetch(:asset, path_pattern)

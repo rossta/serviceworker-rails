@@ -52,6 +52,22 @@ class ServiceWorker::RouteTest < Minitest::Test
     match "/api/v:version/things", "%{version}", "/api/v2/things", "2"
   end
 
+  def test_match_route_pack_true
+    ServiceWorker::Handlers.stub(:webpacker?, true) do
+      route = new_route("foo", "bar", pack: true)
+
+      assert_equal "bar", route.match("foo").to_s
+    end
+  end
+
+  def test_match_route_pack_asset_name
+    ServiceWorker::Handlers.stub(:webpacker?, true) do
+      route = new_route("foo", pack: "bar")
+
+      assert_equal "bar", route.match("foo").to_s
+    end
+  end
+
   def match(path_pattern, asset_pattern, path_name, asset_name)
     msg = "#{caller[0]} expected route #{path_pattern} to "
 

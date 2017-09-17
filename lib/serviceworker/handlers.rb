@@ -9,8 +9,9 @@ module ServiceWorker
     end
 
     def handler_for_route_match(route_match)
-      return webpacker_handler if route_match.options[:pack] && webpacker?
-      return sprockets_handler if route_match.options[:asset] && sprockets?
+      options = route_match.options
+      return webpacker_handler if Route.webpacker?(options)
+      return sprockets_handler if Route.sprockets?(options)
       nil
     end
 
