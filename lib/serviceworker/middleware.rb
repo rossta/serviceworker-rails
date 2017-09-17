@@ -27,7 +27,7 @@ module ServiceWorker
 
     def call(env)
       case env[REQUEST_METHOD]
-        when GET, HEAD
+      when GET, HEAD
         route_match = @router.match_route(env)
         return respond_to_match(route_match, env) if route_match
       end
@@ -46,13 +46,13 @@ module ServiceWorker
     def respond_to_match(route_match, env)
       env = env.merge("serviceworker.asset_name" => route_match.asset_name)
 
-      status, headers, body = route_match_handler(route_match).call(env)
+      status, headers, body = handler_for_route_match(route_match).call(env)
 
       [status, headers.merge(@headers).merge(route_match.headers), body]
     end
 
-    def route_match_handler(route_match)
-      Handlers.route_match_handler(route_match) || @handler
+    def handler_for_route_match(route_match)
+      Handlers.handler_for_route_match(route_match) || @handler
     end
 
     def info(msg)

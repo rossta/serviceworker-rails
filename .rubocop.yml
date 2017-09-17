@@ -63,7 +63,7 @@ Layout/CaseIndentation:
   SupportedStyles:
     - case
     - end
-  IndentOneStep: true
+  IndentOneStep: false
 
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:

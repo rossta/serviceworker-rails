@@ -1,18 +1,40 @@
 require "serviceworker/handlers/rack_handler"
-require "serviceworker/handlers/sprockets_handler"
 
 module ServiceWorker
   module Handlers
     extend self
 
     def build(handler)
-      return handler if handler.respond_to?(:call)
-      default_handler
+      resolve_handler(handler) || default_handler
     end
 
-    def route_match_handler(route_match)
+    def handler_for_route_match(route_match)
       return webpacker_handler if route_match.options[:pack] && webpacker?
+      return sprockets_handler if route_match.options[:asset] && sprockets?
       nil
+    end
+
+    def ===(other)
+      other.respond_to?(:call)
+    end
+
+    def handler_for_name(name)
+      available_handlers = %w[sprockets webpacker rack]
+      if available_handlers.include?(name.to_s)
+        send("#{name}_handler")
+      else
+        raise ServiceWorker::Error,
+          "Unknown handler #{name.inspect}. Please use one of #{available_handlers.inspect}"
+      end
+    end
+
+    def resolve_handler(handler)
+      case handler
+      when Handlers
+        handler
+      when Symbol, String
+        handler_for_name(handler)
+      end
     end
 
     def webpacker_handler
@@ -20,11 +42,20 @@ module ServiceWorker
       ServiceWorker::Handlers::WebpackerHandler.new
     end
 
+    def sprockets_handler
+      require "serviceworker/handlers/sprockets_handler"
+      ServiceWorker::Handlers::SprocketsHandler.new
+    end
+
+    def rack_handler
+      ServiceWorker::Handlers::RackHandler.new
+    end
+
     def default_handler
       if sprockets?
-        ServiceWorker::Handlers::SprocketsHandler.new
+        sprockets_handler
       else
-        ServiceWorker::Handlers::RackHandler.new
+        rack_handler
       end
     end
 
