@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "serviceworker/handlers/rack_handler"
+require "serviceworker/handlers"
 
 module ServiceWorker
   class Middleware
@@ -22,7 +22,7 @@ module ServiceWorker
       @opts = opts
       @headers = opts.fetch(:headers, {}).merge(default_headers)
       @router = opts.fetch(:routes, ServiceWorker::Router.new)
-      @handler = @opts.fetch(:handler, default_handler)
+      @handler = Handlers.build(@opts.fetch(:handler, nil))
     end
 
     def call(env)
@@ -51,33 +51,16 @@ module ServiceWorker
       [status, headers.merge(@headers).merge(route_match.headers), body]
     end
 
+    def route_match_handler(route_match)
+      Handlers.route_match_handler(route_match) || @handler
+    end
+
     def info(msg)
       logger.info "[#{self.class}] - #{msg}"
     end
 
     def logger
       @logger ||= @opts.fetch(:logger, Logger.new(STDOUT))
-    end
-
-    def route_match_handler(route_match)
-      if route_match.options[:pack] && defined?(::Webpacker)
-        webpacker_handler
-      else
-        @handler
-      end
-    end
-
-    def webpacker_handler
-      require "serviceworker/handlers/webpacker_handler"
-      ServiceWorker::Handlers::WebpackerHandler.new
-    end
-
-    def default_handler
-      if defined?(::Rails) && ::Rails.configuration.assets
-        ServiceWorker::Handlers::SprocketsHandler.new
-      else
-        ServiceWorker::Handlers::RackHandler.new
-      end
     end
   end
 end

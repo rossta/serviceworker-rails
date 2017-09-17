@@ -102,3 +102,6 @@ Style/FormatStringToken:
 
 Style/TrailingUnderscoreVariable:
   Enabled: false
+
+Style/ModuleFunction:
+  Enabled: false
