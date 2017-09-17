@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/rossta/serviceworker-rails.svg?branch=master)](https://travis-ci.org/rossta/serviceworker-rails)
 [![Code Climate](https://codeclimate.com/github/rossta/serviceworker-rails/badges/gpa.svg)](https://codeclimate.com/github/rossta/serviceworker-rails)
 
-Turn your Rails app into a Progressive Web App. Use [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) with the Rails asset pipeline.
+Turn your Rails app into a Progressive Web App. Use [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) with the Rails [asset pipeline](https://github.com/rails/sprockets-rails) or [Webpacker](https://github.com/rails/webpacker)
 
 ## Why?
 
@@ -18,7 +18,7 @@ with requests and responses within `/assets/`<em>**</em>. This is not what we wa
 
 * [MDN states](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API#Download_install_and_activate) browsers check for updated service worker scripts in the background every 24 hours (possibly less). Rails developers wouldn't be able to take advantage of this feature since the fingerprint strategy means assets at a given url are immutable. Beside fingerprintings, the `Cache-Control` headers used for static files served from Rails also work against browser's treatment of service workers.
 
-We want Sprockets to compile service worker JavaScript from ES6/7, CoffeeScript, ERB, etc. but must remove the caching and scoping mechanisms offered by Rails asset pipeline defaults. This is where `serviceworker-rails` comes in.
+We want Sprockets or Webpacker to compile service worker JavaScript from ES6/7, CoffeeScript, ERB, etc. but must remove the caching and scoping mechanisms offered by Rails defaults. This is where `serviceworker-rails` comes in.
 
 *Check out the [blog post](https://rossta.net/blog/service-worker-on-rails.html)
 for more background.*
@@ -270,6 +270,9 @@ Rails.application.configure do
     # insert custom headers
     match "/header-serviceworker.js" => "another/serviceworker.js",
       headers: { "X-Resource-Header" => "A resource" }
+
+    # maps to serviceworker "pack" compiled by Webpacker
+    match "/webpack-serviceworker.js" => "serviceworker.js", pack: true
 
     # anonymous glob exposes `paths` variable for interpolation
     match "/*/serviceworker.js" => "%{paths}/serviceworker.js"
