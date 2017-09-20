@@ -3,8 +3,8 @@
 require "rack/file"
 
 module ServiceWorker
-  module Rails
-    class Handler
+  module Handlers
+    class SprocketsHandler
       def call(env)
         path_info = env.fetch("serviceworker.asset_name")
 
@@ -15,7 +15,7 @@ module ServiceWorker
         end
       end
 
-    private
+      private
 
       def sprockets_server
         ::Rails.application.assets

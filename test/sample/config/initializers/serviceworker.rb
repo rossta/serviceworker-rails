@@ -10,5 +10,7 @@ Sample::Application.configure do
     match "/captures/*named/serviceworker.js" => "captures/%{named}-serviceworker.js"
 
     get "/*/serviceworker.js" => "fallback/serviceworker.js"
+
+    get "/webpack-serviceworker.js", pack: "serviceworker.js"
   end
 end

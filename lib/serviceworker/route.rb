@@ -4,10 +4,18 @@ module ServiceWorker
   class Route
     attr_reader :path_pattern, :asset_pattern, :options
 
-    RouteMatch = Struct.new(:path, :asset_name, :headers) do
+    RouteMatch = Struct.new(:path, :asset_name, :headers, :options) do
       def to_s
         asset_name
       end
+    end
+
+    def self.webpacker?(options)
+      options.key?(:pack) && Handlers.webpacker?
+    end
+
+    def self.sprockets?(options)
+      options.key?(:asset)
     end
 
     def initialize(path_pattern, asset_pattern = nil, options = {})
@@ -17,7 +25,11 @@ module ServiceWorker
       end
 
       @path_pattern = path_pattern
-      @asset_pattern = asset_pattern || options[:asset] || path_pattern
+      @asset_pattern = if self.class.webpacker?(options)
+                         asset_pattern || options.fetch(:pack, path_pattern)
+                       else
+                         asset_pattern || options.fetch(:asset, path_pattern)
+                       end
       @options = options
     end
 
@@ -26,7 +38,7 @@ module ServiceWorker
 
       asset = resolver.call(path) or return nil
 
-      RouteMatch.new(path, asset, headers)
+      RouteMatch.new(path, asset, headers, options)
     end
 
     def headers

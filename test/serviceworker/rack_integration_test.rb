@@ -4,7 +4,7 @@ class ServiceWorker::RackIntegrationTest < Minitest::Test
   include Rack::Test::Methods
 
   def handler
-    ServiceWorker::Handler.new(Pathname.new(Dir.pwd).join("test/static"))
+    ServiceWorker::Handlers::RackHandler.new(Pathname.new(Dir.pwd).join("test/static"))
   end
 
   def router

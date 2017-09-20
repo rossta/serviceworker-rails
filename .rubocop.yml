@@ -1,9 +1,11 @@
 AllCops:
   Exclude:
     - "test/tmp/**/*"
+    - "test/log/**/*"
     - "tmp/**/*"
     - "coverage/**/*"
     - "gemfiles/**/*"
+    - "**/node_modules/**/*"
 
 Metrics/LineLength:
   Max: 120
@@ -61,7 +63,7 @@ Layout/CaseIndentation:
   SupportedStyles:
     - case
     - end
-  IndentOneStep: true
+  IndentOneStep: false
 
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
@@ -96,4 +98,10 @@ Style/ClassAndModuleChildren:
   Enabled: false
 
 Style/FormatStringToken:
+  Enabled: false
+
+Style/TrailingUnderscoreVariable:
+  Enabled: false
+
+Style/ModuleFunction:
   Enabled: false

@@ -55,8 +55,10 @@ class ServiceWorker::RouterTest < Minitest::Test
       match "/bar"
     end
 
-    assert_equal @router.match_route("PATH_INFO" => "/foo").to_a, ["/foo", "foo", {}]
-    assert_equal @router.match_route("PATH_INFO" => "/bar").to_a, ["/bar", "bar", {}]
+    path, asset_name, headers, _ = @router.match_route("PATH_INFO" => "/foo").to_a
+    assert_equal [path, asset_name, headers], ["/foo", "foo", {}]
+    path, asset_name, headers, _ = @router.match_route("PATH_INFO" => "/bar").to_a
+    assert_equal [path, asset_name, headers], ["/bar", "bar", {}]
   end
 
   def test_match_route_doesnt_match

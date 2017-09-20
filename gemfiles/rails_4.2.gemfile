@@ -3,6 +3,7 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 4.2"
+gem "webpacker"
 
 group :development, :test do
   gem "guard", :require => false

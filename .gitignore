@@ -6,5 +6,7 @@
 /doc/
 /pkg/
 /spec/reports/
-/tmp/
+**/tmp/
+**/log/
+**/node_modules/
 /gemfiles/*.lock
