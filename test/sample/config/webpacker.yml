@@ -5,25 +5,22 @@ default: &default
   source_entry_path: packs
   public_output_path: packs
   cache_path: tmp/cache/webpacker
-  compile: true
 
   # Additional paths webpack should lookup modules
   # ['app/assets', 'engine/foo/app/assets']
   resolved_paths: []
 
-  # Reload manifest.json on all requests so we reload latest compiled packs
+  # Reload manifest.json on all requests so we reload latest compiled packs
   cache_manifest: false
 
   extensions:
-    - .coffee
-    - .erb
     - .js
-    - .jsx
-    - .ts
-    - .vue
     - .sass
     - .scss
     - .css
+    - .module.sass
+    - .module.scss
+    - .module.css
     - .png
     - .svg
     - .gif
@@ -34,11 +31,25 @@ development:
   <<: *default
   compile: true
 
+  # Reference: https://webpack.js.org/configuration/dev-server/
   dev_server:
+    https: false
     host: localhost
     port: 3035
+    public: localhost:3035
     hmr: false
-    https: false
+    # Inline should be set to true if using HMR
+    inline: true
+    overlay: true
+    compress: true
+    disable_host_check: true
+    use_local_ip: false
+    quiet: false
+    headers:
+      'Access-Control-Allow-Origin': '*'
+    watch_options:
+      ignored: /node_modules/
+
 
 test:
   <<: *default
