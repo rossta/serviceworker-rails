@@ -11,7 +11,7 @@ before_install:
   - gem install bundler -v 1.15.3
 install:
   - bundle install --path vendor/bundle
-  - cd test/sample && yarn install
+  - cd test/sample && yarn install && cd -
 gemfile:
   - gemfiles/rails_3.2.gemfile
   - gemfiles/rails_4.2.gemfile
