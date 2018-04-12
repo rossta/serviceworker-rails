@@ -17,3 +17,8 @@ appraise "rails-5.1" do
   gem "rails", "~> 5.1"
   gem "webpacker"
 end
+
+appraise "rails-5.2" do
+  gem "rails", "~> 5.2"
+  gem "webpacker", "~> 3.4"
+end
