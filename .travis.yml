@@ -10,7 +10,8 @@ rvm:
   - 2.4.4
   - 2.5.1
 before_install:
-  - gem install bundler -v 1.15.3
+  - gem update --system
+  - gem install bundler
 install:
   - bundle install --path vendor/bundle
   - cd test/sample && yarn install && cd -
