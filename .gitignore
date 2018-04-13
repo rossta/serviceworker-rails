@@ -10,3 +10,4 @@
 **/log/
 **/node_modules/
 /gemfiles/*.lock
+.byebug_history
