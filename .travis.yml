@@ -5,10 +5,13 @@ cache:
   directories:
     - node_modules
 rvm:
-  - 2.2.7
-  - 2.3.4
+  - 2.2.10
+  - 2.3.7
+  - 2.4.4
+  - 2.5.1
 before_install:
-  - gem install bundler -v 1.15.3
+  - gem update --system
+  - gem install bundler
 install:
   - bundle install --path vendor/bundle
   - cd test/sample && yarn install && cd -
@@ -17,5 +20,6 @@ gemfile:
   - gemfiles/rails_4.2.gemfile
   - gemfiles/rails_5.0.gemfile
   - gemfiles/rails_5.1.gemfile
+  - gemfiles/rails_5.2.gemfile
 script:
   - bundle exec rake
