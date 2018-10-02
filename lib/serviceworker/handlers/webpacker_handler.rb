@@ -11,7 +11,12 @@ module ServiceWorker
 
         path = Webpacker.manifest.lookup(path_info)
 
-        file_server.call(env.merge("PATH_INFO" => path))
+        if Webpacker.dev_server.running?
+          proxy = Webpacker::DevServerProxy.new
+          proxy.call(env.merge("PATH_INFO" => path))
+        else
+          file_server.call(env.merge("PATH_INFO" => path))
+        end
       end
 
       private
