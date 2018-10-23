@@ -10,6 +10,8 @@ class ServiceWorker::RackIntegrationTest < Minitest::Test
   def router
     ServiceWorker::Router.new do
       match "/serviceworker.js" => "assets/serviceworker.js"
+      match "/cacheable-serviceworker.js" => "assets/serviceworker.js",
+            headers: { "Cache-Control" => "public, max-age=12345" }
     end
   end
 
@@ -33,5 +35,11 @@ class ServiceWorker::RackIntegrationTest < Minitest::Test
     assert_equal "application/javascript", last_response.headers["Content-Type"]
     assert_equal "private, max-age=0, no-cache", last_response.headers["Cache-Control"]
     assert_match(/console.log\(.*'Hello from Rack ServiceWorker!'.*\);/, last_response.body)
+  end
+
+  def test_cacheable_route
+    get "/cacheable-serviceworker.js"
+
+    assert_equal "public, max-age=12345", last_response.headers["Cache-Control"]
   end
 end
