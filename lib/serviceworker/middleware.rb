@@ -20,7 +20,7 @@ module ServiceWorker
     def initialize(app, opts = {})
       @app = app
       @opts = opts
-      @headers = opts.fetch(:headers, {}).merge(default_headers)
+      @headers = default_headers.merge(opts.fetch(:headers, {}))
       @router = opts.fetch(:routes, ServiceWorker::Router.new)
       @handler = Handlers.build(@opts.fetch(:handler, nil))
     end
