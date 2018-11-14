@@ -22,6 +22,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "railties", [">= 3.1"]
 
+  spec.required_ruby_version = "~> 2.2"
+
   spec.add_development_dependency "sprockets-rails"
   spec.add_development_dependency "bundler", "~> 1.11"
   spec.add_development_dependency "rake", "~> 11.0"
