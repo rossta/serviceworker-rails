@@ -51,10 +51,7 @@ module ServiceWorker
 
     def match_route(env)
       path = env[PATH_INFO]
-      @routes.each do |route|
-        match = route.match(path) and return match
-      end
-      nil
+      @routes.lazy.map { |route| route.match(path) }.detect(&:itself)
     end
   end
 end
