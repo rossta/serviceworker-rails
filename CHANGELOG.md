@@ -1,3 +1,10 @@
+### 0.6.0 - 2019-04-11
+
+* enhancements
+  * experimental support for Webpacker (@rossta, @pedantic-git)
+  * allow cache override (@omnibs)
+  * support recent rubies (@grzuy)
+
 ### 0.5.5 - 2017-05-01
 
 * bug fixes
