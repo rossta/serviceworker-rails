@@ -82,7 +82,13 @@ It will also make the following modifications to existing files:
 * Injects tags into the `head` of `app/views/layouts/application.html.erb` for
   linking to the web app manifest
 
-**NOTE** Given that Service Worker operates in a separate browser thread, outside the context of your web pages, you don't want to include `serviceworker.js` script in your `application.js`. So if you have a line like `require_tree .` in your `application.js` file, you'll either need to move your `serviceworker.js` to another location or replace `require_tree` with something more explicit.
+**NOTE** Given that Service Worker operates in a separate browser thread, outside the context of your web pages, you don't want to include `serviceworker.js` script in your `application.js`. So if you have a line like `require_tree .` in your `application.js` file, you can ignore the `serviceworker.js` file by using Sprocket's `stub` directive:
+
+```javascript
+//= stub serviceworker
+```
+
+Alternatively, you can move your `serviceworker.js` to another location or replace `require_tree` with something more explicit.
 
 To learn more about each of the changes or to perform the set up yourself, check
 out the manual setup section below.
