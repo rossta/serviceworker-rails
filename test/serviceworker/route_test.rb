@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class ServiceWorker::RouteTest < Minitest::Test
@@ -74,10 +76,10 @@ class ServiceWorker::RouteTest < Minitest::Test
     route = new_route(path_pattern, asset_pattern)
 
     if asset_name
-      msg << "match #{path_name} and return #{asset_name}"
+      msg += "match #{path_name} and return #{asset_name}"
       assert_equal(asset_name, route.match(path_name).to_s, msg)
     else
-      msg << "no match #{path_name}"
+      msg += "no match #{path_name}"
       assert_nil(route.match(path_name), msg)
     end
   end

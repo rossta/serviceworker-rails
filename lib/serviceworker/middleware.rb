@@ -4,9 +4,9 @@ require "serviceworker/handlers"
 
 module ServiceWorker
   class Middleware
-    REQUEST_METHOD = "REQUEST_METHOD".freeze
-    GET = "GET".freeze
-    HEAD = "HEAD".freeze
+    REQUEST_METHOD = "REQUEST_METHOD"
+    GET = "GET"
+    HEAD = "HEAD"
 
     # Initialize the Rack middleware for responding to serviceworker asset
     # requests

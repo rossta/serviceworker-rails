@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails/generators"
 require "fileutils"
 
@@ -33,7 +35,7 @@ module Serviceworker
       def update_application_layout
         layout = detect_layout
         snippet = %(<link rel="manifest" href="/manifest.json" />)
-        snippet << %(\n<meta name="apple-mobile-web-app-capable" content="yes">)
+        snippet += %(\n<meta name="apple-mobile-web-app-capable" content="yes">)
         unless layout
           conditional_warn "Could not locate application layout. To insert manifest tags manually, use:\n\n#{snippet}\n"
           return
@@ -55,6 +57,7 @@ module Serviceworker
         %w[.js .js.erb .coffee .coffee.erb .js.coffee .js.coffee.erb].each do |ext|
           next unless File.exist?(javascripts_dir("application#{ext}"))
           return [ext, "#="] if ext.include?(".coffee")
+
           return [ext, "//="]
         end
       end

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require "test_helper"
 
 class ServiceWorker::HandlersTest < Minitest::Test
   def test_build_handler
-    handler_given = ->() { [200, {}, "console.log('Foobar!');"] }
+    handler_given = -> { [200, {}, "console.log('Foobar!');"] }
     handler = ServiceWorker::Handlers.build(handler_given)
 
     assert_equal handler_given, handler
@@ -16,6 +18,7 @@ class ServiceWorker::HandlersTest < Minitest::Test
 
   def test_build_webpacker_handler
     return true unless defined?(::Webpacker)
+
     handler = ServiceWorker::Handlers.build(:webpacker)
 
     assert handler.is_a?(ServiceWorker::Handlers::WebpackerHandler)
