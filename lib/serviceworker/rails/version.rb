@@ -2,6 +2,6 @@
 
 module ServiceWorker
   module Rails
-    VERSION = "0.5.5".freeze
+    VERSION = "0.5.5"
   end
 end
