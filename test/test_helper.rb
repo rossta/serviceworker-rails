@@ -6,9 +6,9 @@ require "simplecov"
 SimpleCov.minimum_coverage 75
 SimpleCov.maximum_coverage_drop 25
 
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 
-require File.expand_path("../../test/sample/config/environment.rb", __FILE__)
+require File.expand_path("../test/sample/config/environment.rb", __dir__)
 
 require "rack/test"
 require "rails/test_help"

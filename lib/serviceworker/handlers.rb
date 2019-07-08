@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "serviceworker/handlers/rack_handler"
 
 module ServiceWorker
@@ -12,6 +14,7 @@ module ServiceWorker
       options = route_match.options
       return webpacker_handler if Route.webpacker?(options)
       return sprockets_handler if Route.sprockets?(options)
+
       nil
     end
 
@@ -25,7 +28,7 @@ module ServiceWorker
         send("#{name}_handler")
       else
         raise ServiceWorker::Error,
-          "Unknown handler #{name.inspect}. Please use one of #{available_handlers.inspect}"
+              "Unknown handler #{name.inspect}. Please use one of #{available_handlers.inspect}"
       end
     end
 

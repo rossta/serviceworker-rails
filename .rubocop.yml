@@ -31,9 +31,6 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Enabled: false
 
-Performance/Caller:
-  Enabled: false
-
 Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
@@ -79,19 +76,20 @@ Style/SignalException:
 Layout/IndentationWidth:
   Enabled: false
 
-Style/TrivialAccessors:
-  ExactNameMatch: true
-
-Lint/DefEndAlignment:
+Layout/DefEndAlignment:
   Enabled: false
 
 Lint/HandleExceptions:
+  Enabled: false
+
+Naming/FileName:
   Enabled: false
 
 Style/SpecialGlobalVars:
   Enabled: false
 
 Style/TrivialAccessors:
+  ExactNameMatch: true
   Enabled: false
 
 Style/ClassAndModuleChildren:

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Sample::Application.configure do
   config.serviceworker.routes.draw_default
 

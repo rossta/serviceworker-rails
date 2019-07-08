@@ -2,7 +2,7 @@
 
 module ServiceWorker
   class Router
-    PATH_INFO = "PATH_INFO".freeze
+    PATH_INFO = "PATH_INFO"
 
     def self.default
       new.draw_default

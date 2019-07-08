@@ -52,14 +52,14 @@ module ServiceWorker
     end
 
     class AssetResolver
-      PATH_INFO = "PATH_INFO".freeze
+      PATH_INFO = "PATH_INFO"
       DEFAULT_WILDCARD_NAME = :paths
-      WILDCARD_PATTERN = %r{\/\*([^\/]*)}
-      NAMED_SEGMENTS_PATTERN = %r{\/([^\/]*):([^:$\/]+)}
-      LEADING_SLASH_PATTERN = %r{^\/}
+      WILDCARD_PATTERN = %r{\/\*([^\/]*)}.freeze
+      NAMED_SEGMENTS_PATTERN = %r{\/([^\/]*):([^:$\/]+)}.freeze
+      LEADING_SLASH_PATTERN = %r{^\/}.freeze
       INTERPOLATION_PATTERN = Regexp.union(
         /%%/,
-        /%\{(\w+)\}/, # matches placeholders like "%{foo}"
+        /%\{(\w+)\}/ # matches placeholders like "%{foo}"
       )
 
       attr_reader :path_pattern, :asset_pattern

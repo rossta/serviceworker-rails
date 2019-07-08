@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails/generators"
 require "fileutils"
 
@@ -55,6 +57,7 @@ module Serviceworker
         %w[.js .js.erb .coffee .coffee.erb .js.coffee .js.coffee.erb].each do |ext|
           next unless File.exist?(javascripts_dir("application#{ext}"))
           return [ext, "#="] if ext.include?(".coffee")
+
           return [ext, "//="]
         end
       end

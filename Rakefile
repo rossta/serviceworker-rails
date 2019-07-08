@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require "rubygems"
 require "bundler/setup"
 require "bundler/gem_tasks"
 require "rake/testtask"
 require "rubocop/rake_task"
 
-APP_RAKEFILE = File.expand_path("../test/sample/Rakefile", __FILE__)
+APP_RAKEFILE = File.expand_path("test/sample/Rakefile", __dir__)
 load "rails/tasks/engine.rake"
 
 RuboCop::RakeTask.new

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ServiceWorker
   Error = Class.new(StandardError)
   RouteError = Class.new(Error)
