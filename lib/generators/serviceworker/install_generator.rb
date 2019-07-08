@@ -35,7 +35,7 @@ module Serviceworker
       def update_application_layout
         layout = detect_layout
         snippet = %(<link rel="manifest" href="/manifest.json" />)
-        snippet << %(\n<meta name="apple-mobile-web-app-capable" content="yes">)
+        snippet += %(\n<meta name="apple-mobile-web-app-capable" content="yes">)
         unless layout
           conditional_warn "Could not locate application layout. To insert manifest tags manually, use:\n\n#{snippet}\n"
           return
