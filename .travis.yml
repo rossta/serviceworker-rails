@@ -6,9 +6,10 @@ cache:
     - node_modules
 rvm:
   - 2.4.4
-  - 2.5.1
+  - 2.5.3
 before_install:
-  - gem install bundler -v 1.17.3
+  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
+  - gem install bundler -v '< 2'
 install:
   - bundle install --path vendor/bundle
   - cd test/sample && yarn install && cd -
