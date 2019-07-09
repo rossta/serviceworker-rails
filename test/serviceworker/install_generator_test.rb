@@ -41,7 +41,7 @@ class ServiceWorker::InstallGeneratorTest < ::Rails::Generators::TestCase
 
   test "generates companion javascript" do
     assert_file "app/assets/javascripts/serviceworker-companion.js" do |content|
-      assert_match(/navigator.serviceWorker.register/, content)
+      assert_match(/navigator.serviceWorker./, content)
     end
 
     assert_file "app/assets/javascripts/application.js" do |content|
