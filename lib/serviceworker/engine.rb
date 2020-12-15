@@ -10,7 +10,7 @@ module ServiceWorker
     config.serviceworker.headers = {}
     config.serviceworker.routes = ServiceWorker::Router.new
     config.serviceworker.handler = :sprockets
-    config.serviceworker.icon_sizes = %w[36 48 60 72 76 96 120 152 180 192 512]
+    config.serviceworker.icon_sizes = %w[36 48 60 72 76 96 120 144 152 180 192 384 512]
 
     initializer "serviceworker-rails.configure_rails_initialization", after: :load_config_initializers do
       config.serviceworker.logger ||= ::Rails.logger
