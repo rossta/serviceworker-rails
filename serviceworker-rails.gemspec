@@ -22,10 +22,11 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "railties", [">= 3.1"]
 
-  spec.add_development_dependency "appraisal", "~> 2.1.0"
+  spec.add_development_dependency "appraisal", "~> 2.3.0"
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "rack-test"
   spec.add_development_dependency "rails"
+  spec.add_development_dependency "sprockets", "~> 3.0"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rubocop"
   spec.add_development_dependency "simplecov"

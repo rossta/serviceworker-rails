@@ -6,10 +6,10 @@ gem "rails", "~> 4.2"
 gem "webpacker"
 
 group :development, :test do
-  gem "guard", :require => false
-  gem "guard-minitest", :require => false
+  gem "guard", require: false
+  gem "guard-minitest", require: false
   gem "pry"
-  gem "pry-byebug", :platforms => [:mri]
+  gem "pry-byebug", platforms: [:mri]
 end
 
-gemspec :path => "../"
+gemspec path: "../"

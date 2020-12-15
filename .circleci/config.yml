@@ -1,0 +1,59 @@
+version: 2.1
+
+orbs:
+  ruby: circleci/ruby@1.1.0
+  node: circleci/node@2
+
+commands:
+  bundle-install:
+    description: Install gem versions
+    steps:
+      - run: ruby -v
+      - run: echo $RAILS_ENV
+      - run: echo $RACK_ENV
+      - run: gem install bundler:1.17.2
+      - run: 'shasum Gemfile.lock gemfiles/*.lock > checksum.tmp'
+      - run: bundle config set path vendor/bundle
+      - restore_cache:
+          keys:
+            - gems-v1-{{ checksum "./checksum.tmp"  }}
+            - gems-v1-
+      - run: bundle install
+      - run: bundle exec appraisal install
+      - save_cache:
+          key: gems-v1-{{ checksum "./checksum.tmp"  }}
+          paths:
+            - vendor/bundle
+  ruby-test:
+    description: Run tests against various Rails versions
+    steps:
+      - run: bundle exec rake app:appraisal
+
+jobs:
+  test:
+    working_directory: ~/serviceworker-rails
+    docker:
+      - image: cimg/ruby:<<parameters.version>>-node
+    parameters:
+      version:
+        description: 'version tag'
+        default: '2.7'
+        type: string
+    environment:
+      BUNDLE_JOBS: '3'
+      BUNDLE_RETRY: '3'
+      BUNDLE_PATH: vendor/bundle
+      RAILS_ENV: test
+    steps:
+      - checkout
+      - bundle-install
+      - ruby-test
+      - ruby/rubocop-check
+
+workflows:
+  test:
+    jobs:
+      - test:
+          matrix:
+            parameters:
+              version: ['2.5', '2.6', '2.7']
