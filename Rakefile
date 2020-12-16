@@ -19,10 +19,18 @@ end
 
 task default: %i[test rubocop]
 
+namespace :app do
+  task :yarn_install do
+    Dir.chdir("test/sample") do
+      sh "yarn install"
+    end
+  end
+end
+
 task :compile do
   if defined?(Webpacker)
     Dir.chdir("test/sample") do
-      sh "NODE_ENV=test yarn install"
+      sh "yarn install"
       sh "RAILS_ENV=test ./bin/rake webpacker:compile"
     end
   end

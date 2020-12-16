@@ -6,7 +6,7 @@ orbs:
 
 commands:
   bundle-install:
-    description: Install gem versions
+    description: Install gem dependency matrix
     steps:
       - run: ruby -v
       - run: echo $RAILS_ENV
@@ -21,9 +21,22 @@ commands:
       - run: bundle install
       - run: bundle exec appraisal install
       - save_cache:
-          key: gems-v1-{{ checksum "./checksum.tmp"  }}
+          key: gems-v1-{{ checksum "./checksum.tmp" }}
           paths:
             - vendor/bundle
+  yarn-install:
+    description: Install NPM dependencies
+    steps:
+      - restore_cache:
+          keys:
+            - npm-v2-{{ checksum "./test/sample/yarn.lock" }}
+            - npm-v2-
+      - run: bundle exec rake app:yarn_install
+      - save_cache:
+          key: npm-v2-{{ checksum "./test/sample/yarn.lock" }}
+          paths:
+            - ./test/sample/node_modules
+
   ruby-test:
     description: Run tests against various Rails versions
     steps:
@@ -44,9 +57,11 @@ jobs:
       BUNDLE_RETRY: '3'
       BUNDLE_PATH: vendor/bundle
       RAILS_ENV: test
+      NODE_ENV: development
     steps:
       - checkout
       - bundle-install
+      - yarn-install
       - ruby-test
       - ruby/rubocop-check
 
