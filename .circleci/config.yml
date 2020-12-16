@@ -27,7 +27,7 @@ commands:
   ruby-test:
     description: Run tests against various Rails versions
     steps:
-      - run: bundle exec rake app:appraisal
+      - run: bundle exec appraisal rake test
 
 jobs:
   test:
