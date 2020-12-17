@@ -1,6 +1,5 @@
 /.bundle/
 /.yardoc
-/Gemfile.lock
 /_yardoc/
 /coverage/
 /doc/
@@ -9,7 +8,6 @@
 **/tmp/
 **/log/
 **/node_modules/
-/gemfiles/*.lock
 .byebug_history
 .ruby-gemset
 .ruby-version

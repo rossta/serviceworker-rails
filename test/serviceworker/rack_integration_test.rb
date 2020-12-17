@@ -13,7 +13,7 @@ class ServiceWorker::RackIntegrationTest < Minitest::Test
     ServiceWorker::Router.new do
       match "/serviceworker.js" => "assets/serviceworker.js"
       match "/cacheable-serviceworker.js" => "assets/serviceworker.js",
-            headers: { "Cache-Control" => "public, max-age=12345" }
+            :headers => {"Cache-Control" => "public, max-age=12345"}
     end
   end
 
@@ -25,7 +25,7 @@ class ServiceWorker::RackIntegrationTest < Minitest::Test
     Rack::Builder.new do
       map "/" do
         use ServiceWorker::Middleware, config
-        run ->(_env) { [200, { "Content-Type" => "text/plain" }, ["OK"]] }
+        run ->(_env) { [200, {"Content-Type" => "text/plain"}, ["OK"]] }
       end
     end
   end

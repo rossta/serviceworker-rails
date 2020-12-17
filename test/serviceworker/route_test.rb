@@ -7,7 +7,7 @@ class ServiceWorker::RouteTest < Minitest::Test
     route = new_route("/path", foo: "bar")
 
     assert_equal "/path", route.path_pattern
-    assert_equal({ foo: "bar" }, route.options)
+    assert_equal({foo: "bar"}, route.options)
   end
 
   def test_initialize_route_with_asset
@@ -15,28 +15,28 @@ class ServiceWorker::RouteTest < Minitest::Test
 
     assert_equal "/path", route.path_pattern
     assert_equal "asset", route.asset_pattern
-    assert_equal({ foo: "bar" }, route.options)
+    assert_equal({foo: "bar"}, route.options)
   end
 
   def test_match
-    match "/*", "foo",               "/", "foo"
-    match "/*", "%{paths}",          "/", ""
-    match "/*", "foo",               "/foo", "foo"
-    match "/*", "%{paths}",          "/foo", "foo"
-    match "/*", "foo",               "/foo/bar/baz", "foo"
-    match "/*", "%{paths}",          "/foo/bar/baz", "foo/bar/baz"
+    match "/*", "foo", "/", "foo"
+    match "/*", "%{paths}", "/", ""
+    match "/*", "foo", "/foo", "foo"
+    match "/*", "%{paths}", "/foo", "foo"
+    match "/*", "foo", "/foo/bar/baz", "foo"
+    match "/*", "%{paths}", "/foo/bar/baz", "foo/bar/baz"
     match "/*/foobar.js", "foobar.js", "/not/found/foo/bar.js", nil
     match "/*/foobar.js", "foobar.js", "/is/found/foobar.js", "foobar.js"
 
-    match "/*stuff", "foo",          "/", "foo"
+    match "/*stuff", "foo", "/", "foo"
     match "/*stuff", "%{stuff}/foo", "/", "foo"
     match "/*stuff", "%{stuff}/bar", "/foo", "foo/bar"
     match "/*stuff", "%{stuff}/bar", "/foo/", "foo/bar"
     match "/*stuff", "%{stuff}/boo", "/foo/bar/baz", "foo/bar/baz/boo"
 
-    match "/foo/*", "%{paths}",     "/foo", ""
-    match "/foo/*", "%{paths}",     "/foo/bar", "bar"
-    match "/foo/*", "%{paths}",     "/foo/bar/baz", "bar/baz"
+    match "/foo/*", "%{paths}", "/foo", ""
+    match "/foo/*", "%{paths}", "/foo/bar", "bar"
+    match "/foo/*", "%{paths}", "/foo/bar/baz", "bar/baz"
     match "/foo/*stuff", "%{stuff}", "/", nil
     match "/foo/*stuff", "%{stuff}", "/foo", ""
     match "/foo/*stuff", "%{stuff}", "/foo/bar/baz", "bar/baz"
@@ -71,7 +71,7 @@ class ServiceWorker::RouteTest < Minitest::Test
   end
 
   def match(path_pattern, asset_pattern, path_name, asset_name)
-    msg = "#{caller[0]} expected route #{path_pattern} to "
+    msg = "#{caller(1..1).first} expected route #{path_pattern} to "
 
     route = new_route(path_pattern, asset_pattern)
 

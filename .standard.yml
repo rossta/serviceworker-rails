@@ -1,0 +1,2 @@
+ignore: # default: []
+  - 'test/sample/node_modules/**/*'

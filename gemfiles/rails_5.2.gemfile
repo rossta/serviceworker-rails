@@ -3,13 +3,13 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 5.2"
-gem "webpacker", "~> 3.4"
+gem "webpacker", ">= 4.1"
 
 group :development, :test do
-  gem "guard", :require => false
-  gem "guard-minitest", :require => false
+  gem "guard", require: false
+  gem "guard-minitest", require: false
   gem "pry"
-  gem "pry-byebug", :platforms => [:mri]
+  gem "pry-byebug", platforms: [:mri]
 end
 
-gemspec :path => "../"
+gemspec path: "../"

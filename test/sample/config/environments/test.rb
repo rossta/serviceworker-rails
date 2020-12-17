@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+class TestAssetHost
+  cattr_accessor :host
+
+  def self.proc_method
+    proc { TestAssetHost.host }
+  end
+end
+
 Sample::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -17,14 +25,14 @@ Sample::Application.configure do
   # Configure static file server for tests with Cache-Control for performance.
   if config.respond_to?(:public_file_server)
     config.public_file_server.enabled = true
-    config.public_file_server.headers = { "Cache-Control" => "public, max-age=3600" }
+    config.public_file_server.headers = {"Cache-Control" => "public, max-age=3600"}
   else
     config.serve_static_files = true
     config.static_cache_control = "public, max-age=3600"
   end
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
 
   # Raise exceptions instead of rendering exception templates.
@@ -60,14 +68,6 @@ Sample::Application.configure do
   # Checks for improperly declared sprockets dependencies.
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
-
-  class TestAssetHost
-    cattr_accessor :host
-
-    def self.proc_method
-      proc { TestAssetHost.host }
-    end
-  end
 
   config.action_controller.asset_host = TestAssetHost.proc_method
 end
