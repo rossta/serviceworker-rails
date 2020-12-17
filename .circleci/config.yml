@@ -12,17 +12,17 @@ commands:
       - run: echo $RAILS_ENV
       - run: echo $RACK_ENV
       - run: 'shasum Gemfile.lock gemfiles/*.lock > checksum.tmp'
-      - run: bundle config set path vendor/bundle
+      - run: bundle config set path ~/vendor/bundle
       - restore_cache:
           keys:
-            - gems-v1-{{ checksum "./checksum.tmp"  }}
-            - gems-v1-
+            - gems-v1.0-{{ checksum "./checksum.tmp"  }}
+            - gems-v1.0-
       - run: bundle install
       - run: bundle exec appraisal install
       - save_cache:
-          key: gems-v1-{{ checksum "./checksum.tmp" }}
+          key: gems-v1.0-{{ checksum "./checksum.tmp" }}
           paths:
-            - vendor/bundle
+            - ~/vendor/bundle
   yarn-install:
     description: Install NPM dependencies
     steps:
