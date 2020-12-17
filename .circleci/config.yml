@@ -11,7 +11,6 @@ commands:
       - run: ruby -v
       - run: echo $RAILS_ENV
       - run: echo $RACK_ENV
-      - run: gem install bundler:1.17.2
       - run: 'shasum Gemfile.lock gemfiles/*.lock > checksum.tmp'
       - run: bundle config set path vendor/bundle
       - restore_cache:
