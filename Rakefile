@@ -25,12 +25,18 @@ namespace :app do
       sh "yarn install"
     end
   end
+
+  task :yarn_install_frozen do
+    Dir.chdir("test/sample") do
+      sh "yarn install --frozen-lockfile"
+    end
+  end
 end
 
 task :compile do
   if defined?(Webpacker)
     Dir.chdir("test/sample") do
-      sh "yarn install"
+      sh "yarn install --frozen-lockfile"
       sh "RAILS_ENV=test ./bin/rake webpacker:compile"
     end
   end

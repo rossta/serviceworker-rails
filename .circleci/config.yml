@@ -30,7 +30,7 @@ commands:
           keys:
             - npm-v2-{{ checksum "./test/sample/yarn.lock" }}
             - npm-v2-
-      - run: bundle exec rake app:yarn_install
+      - run: bundle exec rake app:yarn_install_frozen
       - save_cache:
           key: npm-v2-{{ checksum "./test/sample/yarn.lock" }}
           paths:
