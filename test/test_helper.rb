@@ -18,7 +18,7 @@ require "minitest/pride"
 require "serviceworker-rails"
 
 # Load support files
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.

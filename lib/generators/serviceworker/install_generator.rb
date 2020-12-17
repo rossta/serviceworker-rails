@@ -63,9 +63,9 @@ module Serviceworker
       end
 
       def detect_layout
-        layouts = %w[.html.erb .html.haml .html.slim .erb .haml .slim].map do |ext|
+        layouts = %w[.html.erb .html.haml .html.slim .erb .haml .slim].map { |ext|
           layouts_dir("application#{ext}")
-        end
+        }
         layouts.find { |layout| File.exist?(layout) }
       end
 
@@ -90,7 +90,7 @@ module Serviceworker
       end
 
       def conditional_warn(warning)
-        silenced? or warn warning
+        silenced? || warn(warning)
       end
 
       def silenced?

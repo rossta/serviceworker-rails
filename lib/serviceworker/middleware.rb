@@ -35,7 +35,7 @@ module ServiceWorker
       @app.call(env)
     end
 
-  private
+    private
 
     def default_headers
       {
@@ -60,7 +60,7 @@ module ServiceWorker
     end
 
     def logger
-      @logger ||= @opts.fetch(:logger, Logger.new(STDOUT))
+      @logger ||= @opts.fetch(:logger, Logger.new($stdout))
     end
   end
 end

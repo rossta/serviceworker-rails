@@ -45,7 +45,7 @@ class ServiceWorker::InstallGeneratorTest < ::Rails::Generators::TestCase
     end
 
     assert_file "app/assets/javascripts/application.js" do |content|
-      assert_match(%r{\n\/\/= require serviceworker-companion}, content)
+      assert_match(%r{\n//= require serviceworker-companion}, content)
     end
   end
 
@@ -55,7 +55,7 @@ class ServiceWorker::InstallGeneratorTest < ::Rails::Generators::TestCase
     end
 
     assert_file "config/initializers/assets.rb" do |content|
-      matcher = /Rails.configuration.assets.precompile \+\= \%w\[serviceworker.js manifest.json\]/
+      matcher = /Rails.configuration.assets.precompile \+= %w\[serviceworker.js manifest.json\]/
       assert_match(matcher, content)
     end
   end

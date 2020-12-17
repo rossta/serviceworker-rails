@@ -148,17 +148,20 @@ GEM
       ffi (~> 1.0)
     regexp_parser (2.0.0)
     rexml (3.2.4)
-    rubocop (1.6.1)
+    rubocop (1.4.2)
       parallel (~> 1.10)
       parser (>= 2.7.1.5)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.8, < 3.0)
+      regexp_parser (>= 1.8)
       rexml
-      rubocop-ast (>= 1.2.0, < 2.0)
+      rubocop-ast (>= 1.1.1)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 2.0)
     rubocop-ast (1.3.0)
       parser (>= 2.7.1.5)
+    rubocop-performance (1.9.1)
+      rubocop (>= 0.90.0, < 2.0)
+      rubocop-ast (>= 0.4.0)
     ruby-progressbar (1.10.1)
     semantic_range (2.3.1)
     shellany (0.0.1)
@@ -175,6 +178,9 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    standard (0.10.2)
+      rubocop (= 1.4.2)
+      rubocop-performance (= 1.9.1)
     thor (1.0.1)
     thread_safe (0.3.6)
     tzinfo (1.2.8)
@@ -202,11 +208,11 @@ DEPENDENCIES
   rack-test
   rails (~> 5.1)
   rake
-  rubocop
   serviceworker-rails!
   simplecov
   sprockets (~> 3.0)
   sprockets-rails
+  standard
   webpacker
 
 BUNDLED WITH

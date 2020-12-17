@@ -17,7 +17,7 @@ module ServiceWorker
     end
 
     def draw(&block)
-      return self unless block_given?
+      return self unless block
 
       if block.arity == 1
         yield(self)
@@ -43,7 +43,7 @@ module ServiceWorker
         @routes << route
       end
     end
-    alias get match
+    alias_method :get, :match
 
     def any?
       @routes.any?

@@ -28,7 +28,7 @@ module ServiceWorker
         send("#{name}_handler")
       else
         raise ServiceWorker::Error,
-              "Unknown handler #{name.inspect}. Please use one of #{available_handlers.inspect}"
+          "Unknown handler #{name.inspect}. Please use one of #{available_handlers.inspect}"
       end
     end
 
