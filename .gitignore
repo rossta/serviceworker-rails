@@ -11,3 +11,5 @@
 .byebug_history
 .ruby-gemset
 .ruby-version
+/test/tmp_wp
+/test/tmp_sp
