@@ -43,11 +43,15 @@ gem 'serviceworker-rails'
 
 And then execute:
 
-    $ bundle
+```bash
+    bundle
+```
 
 Or install it yourself as:
 
-    $ gem install serviceworker-rails
+```bash
+    gem install serviceworker-rails
+```
 
 To set up your Rails project for use with a Service Worker, you either use the
 Rails generator and edit the generated files as needed, or you can follow the
@@ -57,9 +61,13 @@ manual installation steps.
 
 After bundling the gem in your Rails project, run the generator from the root of
 your Rails project.
+The generator generates service-worker for the Sprockets asset pipeline by default.
+To generate service-worker for the Webpakcer asset pipeline the "--webpacker" flag shall be added.
+It's *recommended* to use the automated setup which takes care for the specific asset pipeline used by your app, and modify the files being generated.
 
-```
-$ rails g serviceworker:install
+```bash
+rails g serviceworker:install # for Sprockets asset pipeline
+rails g serviceworker:install --webpacker # for Webpacker asset pipeline
 ```
 
 The generator will create the following files:
@@ -75,7 +83,7 @@ The generator will create the following files:
 
 It will also make the following modifications to existing files:
 
-* Adds a sprockets directive to `application.js` to require
+* Adds a sprockets directive/webpacker require to `application.js` to require
   `serviceworker-companion.js`
 * Adds `serviceworker.js` and `manifest.json` to the list of compiled assets in
   `config/initializers/assets.rb`
@@ -89,7 +97,8 @@ out the manual setup section below.
 
 ### Manual setup
 
-Let's add a `ServiceWorker` to cache some of your JavaScript and CSS assets. We'll assume you already have a Rails application using the asset pipeline built on Sprockets.
+Let's add a `ServiceWorker` to cache some of your JavaScript and CSS assets.
+The following assumes that you have a Rails application **using the sprockets asset pipeline**.
 
 #### Add a service worker script
 
@@ -99,12 +108,18 @@ Create a JavaScript file called `app/assets/javascripts/serviceworker.js.erb`:
 // app/assets/javascripts/serviceworker.js.erb
 console.log('[Service Worker] Hello world!');
 
-var CACHE_NAME = 'v1-cached-assets'
+var CACHE_VERSION = 'v1';
+var CACHE_NAME = CACHE_VERSION + ':sw-cache-';
 
 function onInstall(event) {
+  console.log('[Serviceworker]', "Rails Service Worker Installing!", event);
   event.waitUntil(
     caches.open(CACHE_NAME).then(function prefill(cache) {
       return cache.addAll([
+
+        // make sure serviceworker.js is not required by application.js
+        // if you want to reference application.js from here
+        // (Change accordingly when Webpacker serves js/css).
         '<%= asset_path "application.js" %>',
         '<%= asset_path "application.css" %>',
         '/offline.html',
@@ -115,7 +130,7 @@ function onInstall(event) {
 }
 
 function onActivate(event) {
-  console.log('[Serviceworker]', "Activating!", event);
+  console.log('[Serviceworker]', "Rails Service Worker Activating!", event);
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
       return Promise.all(
@@ -123,7 +138,7 @@ function onActivate(event) {
           // Return true if you want to remove this cache,
           // but remember that caches are shared across
           // the whole origin
-           return cacheName.indexOf('v1') !== 0;
+          return cacheName.indexOf(CACHE_VERSION) !== 0;
         }).map(function(cacheName) {
           return caches.delete(cacheName);
         })
@@ -132,8 +147,30 @@ function onActivate(event) {
   );
 }
 
-self.addEventListener('install', onInstall)
-self.addEventListener('activate', onActivate)
+// Borrowed from https://github.com/TalAter/UpUp
+function onFetch(event) {
+  event.respondWith(
+    // try to return untouched request from network first
+    fetch(event.request).catch(function() {
+      // if it fails, try to return request from the cache
+      return caches.match(event.request).then(function(response) {
+        if (response) {
+          return response;
+        }
+        // if not found in cache, return default offline content for navigate requests
+        if (event.request.mode === 'navigate' ||
+          (event.request.method === 'GET' && event.request.headers.get('accept').includes('text/html'))) {
+          console.log('[Serviceworker]', "Rails Service Worker Fetching offline content", event);
+          return caches.match('/offline.html');
+        }
+      })
+    })
+  );
+}
+
+self.addEventListener('install', onInstall);
+self.addEventListener('activate', onActivate);
+self.addEventListener('fetch', onFetch);
 ```
 
 For use in production, instruct Sprockets to precompile service worker scripts separately from `application.js`, as in the following example:
@@ -146,10 +183,15 @@ You'll need to register the service worker with a companion script in your main 
 // app/assets/javascripts/serviceworker-companion.js
 
 if (navigator.serviceWorker) {
-  navigator.serviceWorker.register('/serviceworker.js', { scope: './' })
-    .then(function(reg) {
-      console.log('[Page] Service worker registered!');
-    });
+  navigator.serviceWorker
+    .register("/serviceworker.js", { scope: "./" })
+      .then(function() {
+        console.log("[Companion]", "Rails Service worker registered!")
+      })
+      .catch(function(error) {
+       // registration failed :(
+        console.log("[Companion]", "Rails Service worker registration failed: " + error)
+      })
 }
 
 // app/assets/javascripts/application.js
@@ -167,7 +209,11 @@ You may also want to create a `manifest.json` file to make your web app installa
 {
   "name": "My Progressive Rails App",
   "short_name": "Progressive",
-  "start_url": "/"
+  "start_url": "/",
+  "theme_color": "#000000",
+  "background_color": "#FFFFFF",
+  "display": "fullscreen",
+  "orientation": "portrait"
 }
 ```
 
@@ -175,6 +221,7 @@ You'd then link to your manifest from the application layout:
 
 ```html
 <link rel="manifest" href="/manifest.json" />
+<meta name="apple-mobile-web-app-capable" content="yes">
 ```
 
 #### Configure the middleware
@@ -243,6 +290,13 @@ function onFetch(event) {
 self.addEventListener('fetch', onFetch);
 ```
 
+#### Integration with Webpacker notes
+
+The automated install script takes care for the initial scaffold for using the serviceworker with Webpacker.
+
+Depending on which loaders you use, Webpacker may not serve the manifest.json.erb correctly.
+Our suggestion is to create a manifest.json and put it under the public/ directory instead of being served from Webpacker.
+
 ## Configuration
 
 When `serviceworker-rails` is required in your Gemfile, it will insert a middleware into the Rails
@@ -291,13 +345,28 @@ config.serviceworker.headers["X-Custom-Header"] = "foobar"
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/rake` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies.
+
+To run tests use:
+
+```ruby
+bundle exec appraisal bundle install
+bundle exec appraisal rake test
+```
+
+You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+
+A Dockerfile is provided with two stages "development" and "testing":
+
+```bash
+docker build --target development -t service_worker:1.0 .
+docker build --target testing -t service_worker:1.0 . # to run tests in build
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/rossta/serviceworker-rails. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at <https://github.com/rossta/serviceworker-rails>. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
