@@ -3,10 +3,18 @@
 Rails.application.configure do
   config.serviceworker.routes.draw do
     # map to assets implicitly
+    <% if options[:webpacker] -%>
+    match "/serviceworker.js" => 'serviceworker.js', pack: true
+    <% else -%>
     match "/serviceworker.js"
+    <% end -%>
     match "/manifest.json"
 
     # Examples
+    #
+    # map to assets implicitly (default in sprockets)
+    #   match "/serviceworker.js"
+    #   match "/manifest.json"
     #
     # map to a named asset explicitly
     # match "/proxied-serviceworker.js" => "nested/asset/serviceworker.js"
@@ -21,6 +29,9 @@ Rails.application.configure do
     # insert custom headers
     # match "/header-serviceworker.js" => "another/serviceworker.js",
     #   headers: { "X-Resource-Header" => "A resource" }
+    #
+    # maps to serviceworker "pack" compiled by Webpacker
+    # match "/webpack-serviceworker.js" => "serviceworker.js", pack: true
     #
     # anonymous glob exposes `paths` variable for interpolation
     # match "/*/serviceworker.js" => "%{paths}/serviceworker.js"
