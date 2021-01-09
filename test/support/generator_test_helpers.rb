@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module GeneratorTestHelpers
+  FIXTURE_DIR = "fixtures"
+  FIXTURE_WEBPACKER_DEFAULT_APP_JS = "webpacker_default_application.js"
+
   WEBPACKER_RAILS_TEMP_DIR = "tmp_wp"
   SPROCKETS_RAILS_TEMP_DIR = "tmp_sp"
 
@@ -35,12 +38,13 @@ module GeneratorTestHelpers
       # binding.pry
       FileUtils.cd(test_path) do
         # webpacker app gen
-        system "rails new #{WEBPACKER_RAILS_TEMP_DIR} --skip-active-record --skip-test-unit --skip-spring --skip-bundle"
+        system "rails new #{WEBPACKER_RAILS_TEMP_DIR} --skip-active-record --skip-test-unit --skip-spring --skip-bundle --quiet"
         system "sed -i -e '/bootsnap/d' #{WEBPACKER_RAILS_TEMP_DIR}/config/boot.rb"
-        system "cd #{WEBPACKER_RAILS_TEMP_DIR} && bundle install && rails webpacker:install"
+        FileUtils.mkdir_p "#{WEBPACKER_RAILS_TEMP_DIR}/app/javascript/packs/"
+        FileUtils.cp "#{FIXTURE_DIR}/#{FIXTURE_WEBPACKER_DEFAULT_APP_JS}", "#{WEBPACKER_RAILS_TEMP_DIR}/app/javascript/packs/application.js"
 
         # sprockets app gen
-        system "rails new #{SPROCKETS_RAILS_TEMP_DIR} --skip-active-record --skip-test-unit --skip-spring --skip-bundle"
+        system "rails new #{SPROCKETS_RAILS_TEMP_DIR} --skip-active-record --skip-test-unit --skip-spring --skip-bundle --quiet"
       end
     end
 
