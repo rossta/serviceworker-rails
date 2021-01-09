@@ -9,6 +9,8 @@ module Serviceworker
       desc "Make your Rails app a progressive web app"
       source_root File.join(File.dirname(__FILE__), "templates")
 
+      class_option :webpacker, type: :boolean, required: false, default: false, desc: "generates a service worker for the webpacker asset pipeline"
+
       def create_assets
         template "manifest.json", javascripts_dir("manifest.json.erb")
         template "serviceworker.js", javascripts_dir("serviceworker.js.erb")
@@ -21,11 +23,19 @@ module Serviceworker
 
       def update_application_js
         ext, directive = detect_js_format
-        snippet = "#{directive} require serviceworker-companion\n"
+
+        snippet = if options[:webpacker]
+          'require("./serviceworker-companion");'
+        else # sprockets
+          "#{directive} require serviceworker-companion\n"
+        end
+
         append_to_file application_js_path(ext), snippet
       end
 
       def update_precompiled_assets
+        return if options[:webpacker]
+
         snippet = "Rails.configuration.assets.precompile += %w[serviceworker.js manifest.json]\n"
         file_path = initializers_dir("assets.rb")
         FileUtils.touch file_path
@@ -70,7 +80,11 @@ module Serviceworker
       end
 
       def javascripts_dir(*paths)
-        join("app", "assets", "javascripts", *paths)
+        if options[:webpacker]
+          join("app", "javascript", "packs", *paths)
+        else
+          join("app", "assets", "javascripts", *paths)
+        end
       end
 
       def initializers_dir(*paths)
