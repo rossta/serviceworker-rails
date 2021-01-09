@@ -130,7 +130,7 @@ class ServiceWorker::InstallGeneratorWebpackerTest < ServiceWorker::InstallGener
   test "missing application layout does not error" do
     dir = File.expand_path("../#{WEBPACKER_RAILS_TEMP_DIR}", File.dirname(__FILE__))
     system "mv #{dir}/app/views/layouts/application.html.erb #{dir}/app/views/layouts/application.tmp"
-    run_generator
+    run_generator ["--webpacker"]
     system "mv #{dir}/app/views/layouts/application.tmp #{dir}/app/views/layouts/application.html.erb"
   end
 end
