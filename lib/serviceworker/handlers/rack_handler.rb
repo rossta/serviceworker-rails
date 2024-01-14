@@ -18,7 +18,7 @@ module ServiceWorker
       end
 
       def file_server
-        @file_server ||= ::Rack::File.new(@root)
+        @file_server ||= ::Rack::Files.new(@root)
       end
     end
   end
