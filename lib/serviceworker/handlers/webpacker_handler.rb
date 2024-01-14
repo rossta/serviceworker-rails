@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "rack/file"
+require "rack/files"
 require "webpacker"
 
 module ServiceWorker
