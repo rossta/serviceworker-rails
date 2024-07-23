@@ -61,7 +61,7 @@ module Serviceworker
           return [ext, "//="]
         end
         FileUtils.touch javascripts_dir("application.js")
-        ['.js', "//="]
+        [".js", "//="]
       end
 
       def detect_layout
