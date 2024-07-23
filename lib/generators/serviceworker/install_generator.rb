@@ -1,33 +1,27 @@
 # frozen_string_literal: true
 
-require "rails/generators"
-require "fileutils"
+require 'rails/generators'
+require 'fileutils'
 
 module Serviceworker
   module Generators
     class InstallGenerator < ::Rails::Generators::Base
-      desc "Make your Rails app a progressive web app"
-      source_root File.join(File.dirname(__FILE__), "templates")
+      desc 'Make your Rails app a progressive web app'
+      source_root File.join(File.dirname(__FILE__), 'templates')
 
       def create_assets
-        template "manifest.json", javascripts_dir("manifest.json.erb")
-        template "serviceworker.js", javascripts_dir("serviceworker.js.erb")
-        template "serviceworker-companion.js", javascripts_dir("serviceworker-companion.js")
+        template 'manifest.json', javascripts_dir('manifest.json.erb')
+        template 'serviceworker.js', javascripts_dir('serviceworker.js.erb')
+        template 'serviceworker-companion.js', javascripts_dir('serviceworker-companion.js')
       end
 
       def create_initializer
-        template "serviceworker.rb", initializers_dir("serviceworker.rb")
-      end
-
-      def update_application_js
-        ext, directive = detect_js_format
-        snippet = "#{directive} require serviceworker-companion\n"
-        append_to_file application_js_path(ext), snippet
+        template 'serviceworker.rb', initializers_dir('serviceworker.rb')
       end
 
       def update_precompiled_assets
         snippet = "Rails.configuration.assets.precompile += %w[serviceworker.js manifest.json]\n"
-        file_path = initializers_dir("assets.rb")
+        file_path = initializers_dir('assets.rb')
         FileUtils.touch file_path
         append_to_file file_path, snippet
       end
@@ -44,47 +38,32 @@ module Serviceworker
       end
 
       def add_offline_html
-        template "offline.html", public_dir("offline.html")
+        template 'offline.html', public_dir('offline.html')
       end
 
       private
 
-      def application_js_path(ext)
-        javascripts_dir("application#{ext}")
-      end
-
-      def detect_js_format
-        %w[.js .js.erb .coffee .coffee.erb .js.coffee .js.coffee.erb].each do |ext|
-          next unless File.exist?(javascripts_dir("application#{ext}"))
-          return [ext, "#="] if ext.include?(".coffee")
-
-          return [ext, "//="]
-        end
-        FileUtils.touch javascripts_dir("application.js")
-        [".js", "//="]
-      end
-
       def detect_layout
-        layouts = %w[.html.erb .html.haml .html.slim .erb .haml .slim].map { |ext|
+        layouts = %w[.html.erb .html.haml .html.slim .erb .haml .slim].map do |ext|
           layouts_dir("application#{ext}")
-        }
+        end
         layouts.find { |layout| File.exist?(layout) }
       end
 
       def javascripts_dir(*paths)
-        join("app", "assets", "javascripts", *paths)
+        join('app', 'assets', 'javascripts', *paths)
       end
 
       def initializers_dir(*paths)
-        join("config", "initializers", *paths)
+        join('config', 'initializers', *paths)
       end
 
       def layouts_dir(*paths)
-        join("app", "views", "layouts", *paths)
+        join('app', 'views', 'layouts', *paths)
       end
 
       def public_dir(*paths)
-        join("public", *paths)
+        join('public', *paths)
       end
 
       def join(*paths)
@@ -96,7 +75,7 @@ module Serviceworker
       end
 
       def silenced?
-        ENV["RAILS_ENV"] == "test"
+        ENV['RAILS_ENV'] == 'test'
       end
     end
   end

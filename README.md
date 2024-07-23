@@ -75,12 +75,14 @@ The generator will create the following files:
 
 It will also make the following modifications to existing files:
 
-* Adds a sprockets directive to `application.js` to require
-  `serviceworker-companion.js`
 * Adds `serviceworker.js` and `manifest.json` to the list of compiled assets in
   `config/initializers/assets.rb`
 * Injects tags into the `head` of `app/views/layouts/application.html.erb` for
   linking to the web app manifest
+
+Due to the variety of possible javascript implementations, you will still need to perform the following task manually:
+
+* Require the Service Worker companion in your javascript entry point. For example, using the Sprockets asset pipeline, you would add `//= require serviceworker-companion` in `app/assets/javascripts/application.js`. If you're using Importmaps and the `app/javascript` directory, you can move the generated files in `app/assets/javascripts` to `app/javascript` and add `import 'serviceworker-companion'` to `app/javascript/application.js`.
 
 **NOTE** Given that Service Worker operates in a separate browser thread, outside the context of your web pages, you don't want to include `serviceworker.js` script in your `application.js`. So if you have a line like `require_tree .` in your `application.js` file, you'll either need to move your `serviceworker.js` to another location or replace `require_tree` with something more explicit.
 

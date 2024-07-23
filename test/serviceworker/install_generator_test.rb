@@ -43,10 +43,6 @@ class ServiceWorker::InstallGeneratorTest < ::Rails::Generators::TestCase
     assert_file "app/assets/javascripts/serviceworker-companion.js" do |content|
       assert_match(/navigator.serviceWorker./, content)
     end
-
-    assert_file "app/assets/javascripts/application.js" do |content|
-      assert_match(%r{//= require serviceworker-companion}, content)
-    end
   end
 
   test "generates initializer and precompiles assets" do
