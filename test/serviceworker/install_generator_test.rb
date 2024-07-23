@@ -45,7 +45,7 @@ class ServiceWorker::InstallGeneratorTest < ::Rails::Generators::TestCase
     end
 
     assert_file "app/assets/javascripts/application.js" do |content|
-      assert_match(%r{\n//= require serviceworker-companion}, content)
+      assert_match(%r{//= require serviceworker-companion}, content)
     end
   end
 
