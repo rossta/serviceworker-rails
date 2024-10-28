@@ -164,7 +164,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     regexp_parser (2.0.0)
-    rexml (3.2.4)
+    rexml (3.3.9)
     rubocop (1.4.2)
       parallel (~> 1.10)
       parser (>= 2.7.1.5)
