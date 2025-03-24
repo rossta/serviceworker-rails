@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "rack/file"
+require "rack/files"
 require "webpacker"
 
 module ServiceWorker
@@ -22,7 +22,7 @@ module ServiceWorker
       private
 
       def file_server
-        @file_server ||= ::Rack::File.new(::Rails.public_path)
+        @file_server ||= ::Rack::Files.new(::Rails.public_path)
       end
     end
   end
