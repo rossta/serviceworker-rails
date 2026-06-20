@@ -68,7 +68,7 @@ class ServiceWorker::RouteTest < Minitest::Test
     end
   end
 
-  def new_route(*args)
-    ServiceWorker::Route.new(*args)
+  def new_route(...)
+    ServiceWorker::Route.new(...)
   end
 end
