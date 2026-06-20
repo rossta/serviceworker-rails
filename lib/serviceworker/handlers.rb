@@ -12,7 +12,6 @@ module ServiceWorker
 
     def handler_for_route_match(route_match)
       options = route_match.options
-      return webpacker_handler if Route.webpacker?(options)
       return sprockets_handler if Route.sprockets?(options)
 
       nil
@@ -23,7 +22,7 @@ module ServiceWorker
     end
 
     def handler_for_name(name)
-      available_handlers = %w[sprockets webpacker rack]
+      available_handlers = %w[sprockets rack]
       if available_handlers.include?(name.to_s)
         send(:"#{name}_handler")
       else
@@ -41,11 +40,6 @@ module ServiceWorker
       end
     end
 
-    def webpacker_handler
-      require "serviceworker/handlers/webpacker_handler"
-      ServiceWorker::Handlers::WebpackerHandler.new
-    end
-
     def sprockets_handler
       require "serviceworker/handlers/sprockets_handler"
       ServiceWorker::Handlers::SprocketsHandler.new
@@ -61,10 +55,6 @@ module ServiceWorker
       else
         rack_handler
       end
-    end
-
-    def webpacker?
-      defined?(::Webpacker)
     end
 
     def sprockets?

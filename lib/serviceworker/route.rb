@@ -10,10 +10,6 @@ module ServiceWorker
       end
     end
 
-    def self.webpacker?(options)
-      options.key?(:pack) && Handlers.webpacker?
-    end
-
     def self.sprockets?(options)
       options.key?(:asset)
     end
@@ -25,11 +21,7 @@ module ServiceWorker
       end
 
       @path_pattern = path_pattern
-      @asset_pattern = if self.class.webpacker?(options)
-        asset_pattern || options.fetch(:pack, path_pattern)
-      else
-        asset_pattern || options.fetch(:asset, path_pattern)
-      end
+      @asset_pattern = asset_pattern || options.fetch(:asset, path_pattern)
       @options = options
     end
 
