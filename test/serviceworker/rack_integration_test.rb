@@ -13,7 +13,7 @@ class ServiceWorker::RackIntegrationTest < Minitest::Test
     ServiceWorker::Router.new do
       match "/serviceworker.js" => "assets/serviceworker.js"
       match "/cacheable-serviceworker.js" => "assets/serviceworker.js",
-            :headers => {"Cache-Control" => "public, max-age=12345"}
+        :headers => {"Cache-Control" => "public, max-age=12345"}
     end
   end
 

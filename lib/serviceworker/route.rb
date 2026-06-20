@@ -4,14 +4,10 @@ module ServiceWorker
   class Route
     attr_reader :path_pattern, :asset_pattern, :options
 
-    RouteMatch = Struct.new(:path, :asset_name, :headers, :options) {
+    RouteMatch = Struct.new(:path, :asset_name, :headers, :options) do
       def to_s
         asset_name
       end
-    }
-
-    def self.webpacker?(options)
-      options.key?(:pack) && Handlers.webpacker?
     end
 
     def self.sprockets?(options)
@@ -25,11 +21,7 @@ module ServiceWorker
       end
 
       @path_pattern = path_pattern
-      @asset_pattern = if self.class.webpacker?(options)
-        asset_pattern || options.fetch(:pack, path_pattern)
-      else
-        asset_pattern || options.fetch(:asset, path_pattern)
-      end
+      @asset_pattern = asset_pattern || options.fetch(:asset, path_pattern)
       @options = options
     end
 
@@ -54,9 +46,9 @@ module ServiceWorker
     class AssetResolver
       PATH_INFO = "PATH_INFO"
       DEFAULT_WILDCARD_NAME = :paths
-      WILDCARD_PATTERN = %r{/\*([^/]*)}.freeze
-      NAMED_SEGMENTS_PATTERN = %r{/([^/]*):([^:$/]+)}.freeze
-      LEADING_SLASH_PATTERN = %r{^/}.freeze
+      WILDCARD_PATTERN = %r{/\*([^/]*)}
+      NAMED_SEGMENTS_PATTERN = %r{/([^/]*):([^:$/]+)}
+      LEADING_SLASH_PATTERN = %r{^/}
       INTERPOLATION_PATTERN = Regexp.union(
         /%%/,
         /%\{(\w+)\}/ # matches placeholders like "%{foo}"
@@ -112,14 +104,14 @@ module ServiceWorker
         params = if @wildcard_name
           {@wildcard_name => path_match[1].to_s.split("/")}
         else
-          Hash[path_match.names.map(&:to_sym).zip(path_match.captures)]
+          path_match.names.map(&:to_sym).zip(path_match.captures).to_h
         end
         params.delete(:format) if params.key?(:format) && params[:format].nil?
         params
       end
 
       def interpolate_captures(string, captures)
-        string.gsub(INTERPOLATION_PATTERN) { |match|
+        string.gsub(INTERPOLATION_PATTERN) do |match|
           if match == "%%"
             "%"
           else
@@ -128,7 +120,7 @@ module ServiceWorker
             value = value.call(captures) if value.respond_to?(:call)
             Regexp.last_match(3) ? format("%#{Regexp.last_match(3)}", value) : value
           end
-        }.gsub(LEADING_SLASH_PATTERN, "")
+        end.gsub(LEADING_SLASH_PATTERN, "")
       end
     end
   end

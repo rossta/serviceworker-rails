@@ -5,4 +5,7 @@ set -vx
 
 bundle install
 
-# Do any other automated setup that you need to do here
+BUNDLE_GEMFILE=gemfiles/rails_6.0.gemfile bundle install
+BUNDLE_GEMFILE=gemfiles/rails_6.1.gemfile bundle install
+BUNDLE_GEMFILE=gemfiles/rails_7.0.gemfile bundle install
+BUNDLE_GEMFILE=gemfiles/rails_7.1.gemfile bundle install

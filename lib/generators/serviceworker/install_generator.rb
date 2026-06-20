@@ -19,12 +19,6 @@ module Serviceworker
         template "serviceworker.rb", initializers_dir("serviceworker.rb")
       end
 
-      def update_application_js
-        ext, directive = detect_js_format
-        snippet = "#{directive} require serviceworker-companion\n"
-        append_to_file application_js_path(ext), snippet
-      end
-
       def update_precompiled_assets
         snippet = "Rails.configuration.assets.precompile += %w[serviceworker.js manifest.json]\n"
         file_path = initializers_dir("assets.rb")
@@ -49,23 +43,10 @@ module Serviceworker
 
       private
 
-      def application_js_path(ext)
-        javascripts_dir("application#{ext}")
-      end
-
-      def detect_js_format
-        %w[.js .js.erb .coffee .coffee.erb .js.coffee .js.coffee.erb].each do |ext|
-          next unless File.exist?(javascripts_dir("application#{ext}"))
-          return [ext, "#="] if ext.include?(".coffee")
-
-          return [ext, "//="]
-        end
-      end
-
       def detect_layout
-        layouts = %w[.html.erb .html.haml .html.slim .erb .haml .slim].map { |ext|
+        layouts = %w[.html.erb .html.haml .html.slim .erb .haml .slim].map do |ext|
           layouts_dir("application#{ext}")
-        }
+        end
         layouts.find { |layout| File.exist?(layout) }
       end
 

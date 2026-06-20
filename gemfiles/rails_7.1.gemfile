@@ -1,11 +1,6 @@
-# frozen_string_literal: true
-
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in serviceworker-rails.gemspec
-gemspec
-
-gem "debug"
+gem "rails", "~> 7.1.0"
 
 group :development, :test do
   gem "guard", require: false
@@ -13,3 +8,5 @@ group :development, :test do
   gem "pry"
   gem "pry-byebug", platforms: [:mri]
 end
+
+gemspec path: "../"

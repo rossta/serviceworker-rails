@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/rossta/serviceworker-rails.svg?branch=master)](https://travis-ci.org/rossta/serviceworker-rails)
 [![Code Climate](https://codeclimate.com/github/rossta/serviceworker-rails/badges/gpa.svg)](https://codeclimate.com/github/rossta/serviceworker-rails)
 
-Turn your Rails app into a Progressive Web App. Use [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) with the Rails [asset pipeline](https://github.com/rails/sprockets-rails) or [Webpacker](https://github.com/rails/webpacker)
+Turn your Rails app into a Progressive Web App. Use [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) with the Rails [asset pipeline](https://github.com/rails/sprockets-rails)
 
 ## Why?
 
@@ -18,7 +18,7 @@ with requests and responses within `/assets/`<em>**</em>. This is not what we wa
 
 * [MDN states](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API#Download_install_and_activate) browsers check for updated service worker scripts in the background every 24 hours (possibly less). Rails developers wouldn't be able to take advantage of this feature since the fingerprint strategy means assets at a given url are immutable. Beside fingerprintings, the `Cache-Control` headers used for static files served from Rails also work against browser's treatment of service workers.
 
-We want Sprockets or Webpacker to compile service worker JavaScript from ES6/7, CoffeeScript, ERB, etc. but must remove the caching and scoping mechanisms offered by Rails defaults. This is where `serviceworker-rails` comes in.
+We want Sprockets to compile service worker JavaScript from ES6/7, CoffeeScript, ERB, etc. but must remove the caching and scoping mechanisms offered by Rails defaults. This is where `serviceworker-rails` comes in.
 
 *Check out the [blog post](https://rossta.net/blog/service-worker-on-rails.html)
 for more background.*
@@ -75,12 +75,14 @@ The generator will create the following files:
 
 It will also make the following modifications to existing files:
 
-* Adds a sprockets directive to `application.js` to require
-  `serviceworker-companion.js`
 * Adds `serviceworker.js` and `manifest.json` to the list of compiled assets in
   `config/initializers/assets.rb`
 * Injects tags into the `head` of `app/views/layouts/application.html.erb` for
   linking to the web app manifest
+
+Due to the variety of possible javascript implementations, you will still need to perform the following task manually:
+
+* Require the Service Worker companion in your javascript entry point. For example, using the Sprockets asset pipeline, you would add `//= require serviceworker-companion` in `app/assets/javascripts/application.js`. If you're using Importmaps and the `app/javascript` directory, you can move the generated files in `app/assets/javascripts` to `app/javascript` and add `import 'serviceworker-companion'` to `app/javascript/application.js`.
 
 **NOTE** Given that Service Worker operates in a separate browser thread, outside the context of your web pages, you don't want to include `serviceworker.js` script in your `application.js`. So if you have a line like `require_tree .` in your `application.js` file, you'll either need to move your `serviceworker.js` to another location or replace `require_tree` with something more explicit.
 
@@ -271,9 +273,6 @@ Rails.application.configure do
     match "/header-serviceworker.js" => "another/serviceworker.js",
       headers: { "X-Resource-Header" => "A resource" }
 
-    # maps to serviceworker "pack" compiled by Webpacker
-    match "/webpack-serviceworker.js" => "serviceworker.js", pack: true
-
     # anonymous glob exposes `paths` variable for interpolation
     match "/*/serviceworker.js" => "%{paths}/serviceworker.js"
   end
@@ -300,4 +299,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/rossta
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-

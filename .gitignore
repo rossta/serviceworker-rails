@@ -9,5 +9,3 @@
 **/log/
 **/node_modules/
 .byebug_history
-.ruby-gemset
-.ruby-version

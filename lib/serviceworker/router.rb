@@ -10,10 +10,11 @@ module ServiceWorker
 
     attr_reader :routes
 
-    def initialize
+    # standard:disable Style/ArgumentsForwarding
+    def initialize(&block)
       @routes = []
 
-      draw(&Proc.new) if block_given?
+      draw(&block)
     end
 
     def draw(&block)
@@ -27,6 +28,7 @@ module ServiceWorker
 
       self
     end
+    # standard:enable Style/ArgumentsForwarding
 
     def draw_default
       draw { get "/serviceworker.js" }

@@ -62,9 +62,7 @@ class ServiceWorker::RailsIntegrationTest < Minitest::Test
     assert last_response.ok?
     assert_match(/console.log\(.*'Hello from Bar ServiceWorker!'.*\);/, last_response.body)
 
-    assert_raises ActionController::RoutingError do
-      get "/captures/foobar/service/worker.js"
-    end
+    assert_missing_route "/captures/foobar/service/worker.js"
   end
 
   def test_globbed_serviceworker_proxy
@@ -75,9 +73,7 @@ class ServiceWorker::RailsIntegrationTest < Minitest::Test
   end
 
   def test_not_found_serviceworker_proxy
-    assert_raises ActionController::RoutingError do
-      get "/not/found/service/worker.js"
-    end
+    assert_missing_route "/not/found/service/worker.js"
   end
 
   def test_precompiled_serviceworker_request
@@ -100,15 +96,12 @@ class ServiceWorker::RailsIntegrationTest < Minitest::Test
     end
   end
 
-  def test_webpacker_serviceworker
-    if defined?(Webpacker)
-      get "/webpack-serviceworker.js"
-      assert last_response.ok?
-      assert_match(/console.log\(.*Hello from Webpack ServiceWorker!.*\);/, last_response.body)
-    else
-      assert_raises ActionController::RoutingError do
-        get "/webpack-serviceworker.js"
-      end
+  def assert_missing_route(path)
+    assert_raises(ActionController::RoutingError) do
+      get path
     end
+  rescue Minitest::Assertion
+    get path
+    assert_equal 404, last_response.status
   end
 end

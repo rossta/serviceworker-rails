@@ -19,6 +19,8 @@ class ServiceWorker::InstallGeneratorTest < ::Rails::Generators::TestCase
   end
 
   setup do
+    self.class.remove_generator_sample_app
+    self.class.create_generator_sample_app
     run_generator
   end
 
@@ -42,10 +44,6 @@ class ServiceWorker::InstallGeneratorTest < ::Rails::Generators::TestCase
   test "generates companion javascript" do
     assert_file "app/assets/javascripts/serviceworker-companion.js" do |content|
       assert_match(/navigator.serviceWorker./, content)
-    end
-
-    assert_file "app/assets/javascripts/application.js" do |content|
-      assert_match(%r{\n//= require serviceworker-companion}, content)
     end
   end
 

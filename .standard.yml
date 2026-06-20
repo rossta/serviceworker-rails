@@ -1,2 +1,1 @@
-ignore: # default: []
-  - 'test/sample/node_modules/**/*'
+ruby_version: 3.3

@@ -16,14 +16,6 @@ class ServiceWorker::HandlersTest < Minitest::Test
     assert handler.is_a?(ServiceWorker::Handlers::SprocketsHandler)
   end
 
-  def test_build_webpacker_handler
-    return true unless defined?(::Webpacker)
-
-    handler = ServiceWorker::Handlers.build(:webpacker)
-
-    assert handler.is_a?(ServiceWorker::Handlers::WebpackerHandler)
-  end
-
   def test_build_rack_handler
     handler = ServiceWorker::Handlers.build(:rack)
 

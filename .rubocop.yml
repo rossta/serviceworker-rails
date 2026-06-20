@@ -1,0 +1,20 @@
+require:
+  - standard
+
+inherit_gem:
+  standard: config/base.yml
+
+AllCops:
+  Exclude:
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'vendor/**/*'
+    - '.git/**/*'
+    - 'build/**/*'
+    - 'rubies/**/*'
+  SuggestExtensions: false
+
+Lint/Debugger:
+  Enabled: true
+  DebuggerRequires:
+    - debug

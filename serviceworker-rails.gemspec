@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Ross Kaffenberger"]
   spec.email = ["rosskaff@gmail.com"]
 
-  spec.summary = "ServiceWorker for Rails 3+"
+  spec.summary = "ServiceWorker for Rails 7+"
   spec.description = "Integrates ServiceWorker into the Rails asset pipeline."
   spec.homepage = "https://github.com/rossta/serviceworker-rails"
   spec.license = "MIT"
@@ -20,15 +20,15 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "railties", [">= 3.1"]
+  spec.add_dependency "railties", ">= 7.0"
 
-  spec.add_development_dependency "appraisal", "~> 2.3.0"
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "rack-test"
   spec.add_development_dependency "rails"
-  spec.add_development_dependency "sprockets", "~> 3.0"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "standard"
+  spec.add_development_dependency "parallel", "~> 1.27"
   spec.add_development_dependency "simplecov"
+  spec.add_development_dependency "sprockets", "~> 3.0"
   spec.add_development_dependency "sprockets-rails"
+  spec.add_development_dependency "standard"
 end
