@@ -19,6 +19,8 @@ class ServiceWorker::InstallGeneratorTest < ::Rails::Generators::TestCase
   end
 
   setup do
+    self.class.remove_generator_sample_app
+    self.class.create_generator_sample_app
     run_generator
   end
 
