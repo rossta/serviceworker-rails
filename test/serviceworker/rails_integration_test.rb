@@ -62,9 +62,9 @@ class ServiceWorker::RailsIntegrationTest < Minitest::Test
     assert last_response.ok?
     assert_match(/console.log\(.*'Hello from Bar ServiceWorker!'.*\);/, last_response.body)
 
-    assert_raises ActionController::RoutingError do
-      get "/captures/foobar/service/worker.js"
-    end
+    get "/captures/foobar/service/worker.js"
+
+    assert_equal 404, last_response.status
   end
 
   def test_globbed_serviceworker_proxy
@@ -75,9 +75,9 @@ class ServiceWorker::RailsIntegrationTest < Minitest::Test
   end
 
   def test_not_found_serviceworker_proxy
-    assert_raises ActionController::RoutingError do
-      get "/not/found/service/worker.js"
-    end
+    get "/not/found/service/worker.js"
+
+    assert_equal 404, last_response.status
   end
 
   def test_precompiled_serviceworker_request
