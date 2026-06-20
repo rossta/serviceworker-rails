@@ -2,7 +2,7 @@ PATH
   remote: ..
   specs:
     serviceworker-rails (0.6.0)
-      railties (>= 6.0)
+      railties (>= 7.0)
 
 GEM
   remote: https://rubygems.org/
