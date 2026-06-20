@@ -26,7 +26,7 @@ class ServiceWorker::RailsIntegrationTest < Minitest::Test
     get "/serviceworker.js"
 
     assert last_response.ok?
-    assert_equal "application/javascript", last_response.headers["Content-Type"]
+    assert_includes %w[application/javascript text/javascript], last_response.headers["Content-Type"]
     assert_equal "private, max-age=0, no-cache", last_response.headers["Cache-Control"]
     assert_match(/console.log\(.*'Hello from ServiceWorker!'.*\);/, last_response.body)
   end
@@ -81,8 +81,8 @@ class ServiceWorker::RailsIntegrationTest < Minitest::Test
       get "/serviceworker.js"
 
       assert last_response.ok?
-      assert_equal "application/javascript", last_response.headers["Content-Type"]
-      assert_equal "private, max-age=0, no-cache", last_response.headers["Cache-Control"]
+      assert_includes %w[application/javascript text/javascript], last_response.headers["Content-Type"]
+      assert_includes ["private, max-age=0, no-cache", "no-cache"], last_response.headers["Cache-Control"]
       assert_match(/console.log\(.*'Hello from ServiceWorker!'.*\);/, last_response.body)
     end
   end

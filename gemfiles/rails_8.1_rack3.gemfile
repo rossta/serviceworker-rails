@@ -1,0 +1,20 @@
+source "https://rubygems.org"
+
+gem "rails", "~> 8.1.0"
+gem "rack", "~> 3.0"
+gem "sprockets", "~> 4.2"
+gem "sprockets-rails", "~> 3.5"
+gem "serviceworker-rails", path: "../"
+
+group :development, :test do
+  gem "guard", require: false
+  gem "guard-minitest", require: false
+  gem "minitest", "~> 5.0"
+  gem "parallel", "~> 1.27"
+  gem "pry"
+  gem "pry-byebug", platforms: [:mri]
+  gem "rack-test"
+  gem "rake"
+  gem "simplecov"
+  gem "standard"
+end

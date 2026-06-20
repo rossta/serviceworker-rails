@@ -34,7 +34,7 @@ class ServiceWorker::RackIntegrationTest < Minitest::Test
     get "/serviceworker.js"
 
     assert last_response.ok?, "Expected a 200 response but got a #{last_response.status}"
-    assert_equal "application/javascript", last_response.headers["Content-Type"]
+    assert_includes %w[application/javascript text/javascript], last_response.headers["Content-Type"]
     assert_equal "private, max-age=0, no-cache", last_response.headers["Cache-Control"]
     assert_match(/console.log\(.*'Hello from Rack ServiceWorker!'.*\);/, last_response.body)
   end
