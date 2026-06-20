@@ -21,6 +21,11 @@ jobs:
           - rails_7.1
           - rails_8.0
           - rails_8.1
+        exclude:
+          - ruby: '4.0'
+            gemfile: rails_7.0
+          - ruby: '4.0'
+            gemfile: rails_7.1
 
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
