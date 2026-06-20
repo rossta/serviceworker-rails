@@ -144,7 +144,7 @@ GEM
     marcel (1.0.4)
     method_source (1.1.0)
     mini_mime (1.1.5)
-    minitest (5.24.1)
+    minitest (5.27.0)
     mutex_m (0.2.0)
     nenv (0.3.0)
     net-imap (0.4.14)
