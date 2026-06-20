@@ -8,10 +8,8 @@ gemspec
 gem "debug"
 
 group :development, :test do
-  unless ENV["CIRCLE_CI"]
-    gem "guard", require: false
-    gem "guard-minitest", require: false
-    gem "pry"
-    gem "pry-byebug", platforms: [:mri]
-  end
+  gem "guard", require: false
+  gem "guard-minitest", require: false
+  gem "pry"
+  gem "pry-byebug", platforms: [:mri]
 end
