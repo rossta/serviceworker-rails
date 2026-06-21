@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    serviceworker-rails (0.6.0)
+    serviceworker-rails (0.7.0)
       rack (>= 2.1)
       railties (>= 7.0)
 
