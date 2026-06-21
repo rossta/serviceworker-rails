@@ -18,7 +18,17 @@ module ServiceWorker
       end
 
       def file_server
-        @file_server ||= ::Rack::File.new(@root)
+        @file_server ||= rack_files_class.new(@root)
+      end
+
+      def rack_files_class
+        @rack_files_class ||= begin
+          require "rack/files"
+          ::Rack::Files
+        rescue LoadError
+          require "rack/file"
+          ::Rack::File
+        end
       end
     end
   end

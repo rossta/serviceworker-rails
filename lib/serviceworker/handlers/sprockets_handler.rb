@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rack/file"
-
 module ServiceWorker
   module Handlers
     class SprocketsHandler
@@ -22,7 +20,17 @@ module ServiceWorker
       end
 
       def file_server
-        @file_server ||= ::Rack::File.new(::Rails.public_path)
+        @file_server ||= rack_files_class.new(::Rails.public_path)
+      end
+
+      def rack_files_class
+        @rack_files_class ||= begin
+          require "rack/files"
+          ::Rack::Files
+        rescue LoadError
+          require "rack/file"
+          ::Rack::File
+        end
       end
 
       def config
