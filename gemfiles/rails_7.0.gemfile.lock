@@ -1,7 +1,14 @@
 PATH
   remote: ..
   specs:
-    serviceworker-rails (0.6.0)
+    serviceworker-rails (0.7.0)
+      benchmark
+      bigdecimal
+      cgi
+      drb
+      logger
+      mutex_m
+      ostruct
       rack (>= 2.1)
       railties (>= 7.0)
 
@@ -75,13 +82,17 @@ GEM
       tzinfo (~> 2.0)
     ast (2.4.2)
     base64 (0.2.0)
+    benchmark (0.5.0)
+    bigdecimal (4.1.2)
     builder (3.3.0)
-    byebug (11.1.3)
+    byebug (13.0.0)
+    cgi (0.5.1)
     coderay (1.1.3)
     concurrent-ruby (1.3.3)
     crass (1.0.6)
     date (3.3.4)
     docile (1.4.0)
+    drb (2.2.3)
     erubi (1.13.0)
     ffi (1.17.4-aarch64-linux-gnu)
     ffi (1.17.4-aarch64-linux-musl)
@@ -111,12 +122,14 @@ GEM
       minitest (>= 3.0)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
+    io-console (0.8.2)
     json (2.7.2)
     language_server-protocol (3.17.0.3)
     lint_roller (1.1.0)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    logger (1.7.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -131,6 +144,7 @@ GEM
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
     minitest (5.27.0)
+    mutex_m (0.2.0)
     nenv (0.3.0)
     net-imap (0.4.14)
       date
@@ -164,17 +178,19 @@ GEM
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
+    ostruct (0.6.3)
     parallel (1.28.0)
     parser (3.3.11.1)
       ast (~> 2.4.1)
       racc
     prism (1.9.0)
-    pry (0.14.2)
+    pry (0.16.0)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    pry-byebug (3.10.1)
-      byebug (~> 11.0)
-      pry (>= 0.13, < 0.15)
+      reline (>= 0.6.0)
+    pry-byebug (3.12.0)
+      byebug (~> 13.0)
+      pry (>= 0.13, < 0.17)
     racc (1.8.1)
     rack (2.2.9)
     rack-test (2.1.0)
@@ -213,6 +229,8 @@ GEM
     rb-inotify (0.11.1)
       ffi (~> 1.0)
     regexp_parser (2.12.0)
+    reline (0.6.3)
+      io-console (~> 0.5)
     rubocop (1.87.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
