@@ -63,6 +63,15 @@ class ServiceWorker::RouterTest < Minitest::Test
     assert_equal [path, asset_name, headers], ["/bar", "bar", {}]
   end
 
+  def test_match_route_treats_blank_root_path_as_slash
+    @router.draw do
+      match "/"
+    end
+
+    path, asset_name, headers, _ = @router.match_route("PATH_INFO" => "").to_a
+    assert_equal [path, asset_name, headers], ["/", "", {}]
+  end
+
   def test_match_route_doesnt_match
     @router.draw do
       match "/foo"

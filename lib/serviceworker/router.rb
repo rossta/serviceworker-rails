@@ -53,6 +53,7 @@ module ServiceWorker
 
     def match_route(env)
       path = env[PATH_INFO]
+      path = "/" if path == ""
       @routes.lazy.map { |route| route.match(path) }.detect(&:itself)
     end
   end
