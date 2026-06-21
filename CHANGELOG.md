@@ -1,3 +1,9 @@
+### 0.7.0 - 2026-06-20
+
+* enhancements
+  * Add trusted publishing release workflow for GitHub Actions
+  * Add Rack 3 appraisal coverage for Rails 8
+
 ### 0.6.0 - 2019-04-11
 
 * enhancements
