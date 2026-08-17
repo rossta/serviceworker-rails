@@ -5,7 +5,8 @@ set -vx
 
 bundle install
 
-BUNDLE_GEMFILE=gemfiles/rails_6.0.gemfile bundle install
-BUNDLE_GEMFILE=gemfiles/rails_6.1.gemfile bundle install
-BUNDLE_GEMFILE=gemfiles/rails_7.0.gemfile bundle install
-BUNDLE_GEMFILE=gemfiles/rails_7.1.gemfile bundle install
+gemfiles=(gemfiles/*.gemfile)
+
+for gemfile in "${gemfiles[@]}"; do
+  BUNDLE_GEMFILE="$gemfile" bundle install
+done

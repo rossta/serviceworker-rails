@@ -22,6 +22,13 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "railties", ">= 7.0"
   spec.add_dependency "rack", [">= 2.1"]
+  spec.add_dependency "logger"
+  spec.add_dependency "benchmark"
+  spec.add_dependency "bigdecimal"
+  spec.add_dependency "ostruct"
+  spec.add_dependency "mutex_m"
+  spec.add_dependency "drb"
+  spec.add_dependency "cgi"
 
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "rack-test"
